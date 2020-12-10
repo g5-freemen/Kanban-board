@@ -1,0 +1,11 @@
+@media screen and (min-width: 541px) {
+
+    .board__in-progress--container, .board__done--container {
+        display: flex;
+    }
+
+    .board__to-do--container, .board__in-progress--container {
+        margin-right: $bigPadding;
+    }
+
+}

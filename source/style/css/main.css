@@ -376,9 +376,9 @@ template {
           flex-direction: row;
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -ms-flex-line-pack: start;
       align-content: flex-start;
   min-height: 75vh;
@@ -387,7 +387,7 @@ template {
   border-radius: 1rem;
 }
 
-.board__to-do--container {
+.board__to-do--container, .board__in-progress--container, .board__done--container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -402,8 +402,9 @@ template {
           justify-content: flex-start;
   -ms-flex-line-pack: start;
       align-content: flex-start;
-  width: 320px;
-  max-width: 100vw;
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
@@ -413,7 +414,11 @@ template {
   border-radius: 1rem;
 }
 
-.board__to-do--title-bar {
+.board__in-progress--container, .board__done--container {
+  display: none;
+}
+
+.board__title-bar {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -441,7 +446,9 @@ template {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  width: 5rem;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
   background-color: #bbbbbb;
@@ -470,7 +477,7 @@ template {
           justify-content: center;
   -ms-flex-line-pack: center;
       align-content: center;
-  margin: 0;
+  margin: 0 0 0 0.5rem;
   padding: 0;
   width: 1.5rem;
   height: 1.5rem;
@@ -544,7 +551,7 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 50%;
+  width: 70%;
   margin-bottom: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #bbbbbb;
@@ -569,13 +576,11 @@ template {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
 }
 
 .to-do-card--date {
   width: 45%;
+  margin-right: 0.5rem;
   padding: 0.25rem 0.5rem;
   background-color: yellowgreen;
   border-radius: 0.5rem;
@@ -597,6 +602,7 @@ template {
 
 .to-do-card--move-btn {
   background-image: url("../../img/right-pointing-arrow.svg");
+  margin-right: 0.5rem;
 }
 
 .board__add-card-btn {
@@ -619,7 +625,7 @@ template {
   border-radius: 1rem;
 }
 
-.card-form--close-field {
+.card-form--top-field {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -696,5 +702,16 @@ template {
 
 .card-form--save-btn:hover {
   background-color: yellowgreen;
+}
+
+@media screen and (min-width: 541px) {
+  .board__in-progress--container, .board__done--container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+  .board__to-do--container, .board__in-progress--container {
+    margin-right: 1rem;
+  }
 }
 /*# sourceMappingURL=main.css.map */

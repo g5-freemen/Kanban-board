@@ -11,23 +11,18 @@ let toDoBoard = document.querySelector('.board__to-do--container'),
 
 // functions ////////////////////////////////////////////////////
 
-function showToDoCardsCounter() {
-    if (toDoCardsArray.length) {
-        toDoCardsCounter.innerHTML = toDoCardsArray.length;
-        toDoCardsCounter.style.visibility = 'visible';
-        toDoCardsDelBtn.style.visibility = 'visible';
-    } else {
-        toDoCardsDelBtn.style.visibility = 'hidden';
-        toDoCardsCounter.style.visibility = 'hidden';
-    }
-    toDoCardsDelBtnTooltip.style.visibility = 'hidden';
+function loadCards(cardsName) {
+    if (localStorage[cardsName]) {
+        let toDoCardsList = JSON.parse( localStorage[cardsName] );
+        for (let item of toDoCardsList) {
+            toDoCards.append( createCard(item.date, item.title, item.desc, item.id) );
+    } }
 };
 
-function createCard(date, title, desc) {
+function createCard(date, title, desc, idCard) {
     let card = document.createElement('li');
     card.className = "to-do-card";
-    let timerIDgen = new Date();
-    card.id = timerIDgen.getMinutes() * timerIDgen.getMilliseconds();
+    card.id = +idCard;
     card.append(createCardElement('span', title, 'title'));
     card.append(createCardElement('div', desc, 'desc'));
     let bottomBlock = document.createElement('div');
@@ -48,12 +43,26 @@ function createCardElement(tag, text, name) {
     return element;
 };
 
+function showToDoCardsCounter() {
+    if (toDoCardsArray.length) {
+        toDoCardsCounter.innerHTML = toDoCardsArray.length;
+        toDoCardsCounter.style.visibility = 'visible';
+        toDoCardsDelBtn.style.visibility = 'visible';
+    } else {
+        toDoCardsDelBtn.style.visibility = 'hidden';
+        toDoCardsCounter.style.visibility = 'hidden';
+    }
+    toDoCardsDelBtnTooltip.style.visibility = 'hidden';
+};
+
 function closeModalWindow() {
     formNewCard.reset();
     modalWindow.style.visibility = 'hidden';
 };
 
 // listeners ////////////////////////////////////////////////////
+
+loadCards('toDoCards');
 
 toDoCardsDelBtn.addEventListener('mouseover', event => {
     toDoCardsDelBtnTooltip.style.left = 0.82*event.clientX +'px';
@@ -69,6 +78,7 @@ toDoCardsDelBtn.addEventListener('click', () => {
     // if (confirm('Delete all ToDo Cards?')) {
         toDoCardsArray = [];
         toDoCards.innerHTML = '';
+        localStorage.removeItem('toDoCards');
         showToDoCardsCounter();
     // }
 } );
@@ -85,7 +95,10 @@ formNewCard.addEventListener('submit', event => {
     // else {DateTime += " "+ date.getHours() +':'+date.getMinutes()};
     toDoCardTitle = formNewCard.querySelector('.card-form--title').value;
     toDoCardDesc = formNewCard.querySelector('.card-form--desc').value;
-    toDoCards.append ( createCard(DateTime, toDoCardTitle, toDoCardDesc) );
+    let timerIDgen = new Date();
+    let cardId = timerIDgen.getMinutes() * timerIDgen.getMilliseconds();
+    toDoCards.append ( createCard(DateTime, toDoCardTitle, toDoCardDesc, cardId) );
+    localStorage.setItem('toDoCards', JSON.stringify(toDoCardsArray));
     closeModalWindow();
 } );
 
@@ -100,6 +113,7 @@ toDoCards.addEventListener ('click', event => {
             }
         }
         card.remove();
+        localStorage.setItem('toDoCards', JSON.stringify(toDoCardsArray));
         showToDoCardsCounter();
     }
 })

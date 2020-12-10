@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./style/css/main.css">
     <script src="./js/main.js" defer></script>
     <title>Kanban Board</title>
@@ -17,22 +18,39 @@
 
         <main class="board">
         <div class="board__to-do--container">
-            <div class="board__to-do--title-bar">
+            <div class="board__title-bar">
                 <div class="board__title">To do 
                     <div class="board__card_counter"></div></div>
                 <div class="board__to-do--delBtn"></div>
                 <span class="board__card_counter--tooltip">Delete all cards</span>
-            </div> <!-- end of .board__to-do--title-bar -->
+            </div> <!-- end of .board__title-bar -->
                 <ul class="board__cards"></ul>
             <input class="board__add-card-btn" type="button" value="+ Add new">
-        </div> <!-- end of .board__to-do--container -->   
-        <!-- <div class="board__second--container"></div> -->
-        <!-- <div class="board__third--container"></div> -->
+        </div> <!-- end of .board__to-do--container -->
+
+        <div class="board__in-progress--container">
+            <div class="board__title-bar">
+                <div class="board__title">In progress 
+                    <div class="board__card_counter"></div></div>
+                <div class="board__to-do--delBtn"></div>
+                <span class="board__card_counter--tooltip">Delete all cards</span>
+            </div> <!-- end of .board__title-bar -->
+        </div> <!-- end of .board__in-progress--container -->
+
+        <div class="board__done--container">
+            <div class="board__title-bar">
+                <div class="board__title">Done 
+                    <div class="board__card_counter"></div></div>
+                <div class="board__to-do--delBtn"></div>
+                <span class="board__card_counter--tooltip">Delete all cards</span>
+            </div> <!-- end of .board__title-bar -->
+        </div> <!-- end of .board__done--container -->
+
     </main>
 
     <div class="modal-window">
         <form class="card-form">
-            <span class="card-form--close-field">
+            <span class="card-form--top-field">
                 <input class="card-form--title" type="text" placeholder="Enter Card Title" required>
                 <button class="card-form--close-btn"></button>
             </span>

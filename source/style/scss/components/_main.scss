@@ -1,15 +1,14 @@
 .board {
-    @include flexible(flex-start, flex-start, row, nowrap);
+    @include flexible(space-between, flex-start, row, nowrap);
     min-height: 75vh;
     padding: $bigPadding;
     background-color: $primaryBGColor;
     border-radius: $borderRadiusBig;
 }
 
-.board__to-do--container {
+.board__to-do--container, .board__in-progress--container, .board__done--container {
     @include flexible(flex-start, flex-start, column, nowrap);
-    width: 320px;
-    max-width: 100vw;
+    flex: auto;
     height: fit-content;
     padding: $smallPadding;
     border: 4px;
@@ -17,7 +16,11 @@
     border-radius: $borderRadiusBig;
 }
 
-.board__to-do--title-bar {
+.board__in-progress--container, .board__done--container {
+    display: none;
+}
+
+.board__title-bar {
     @include flexible(space-between, center, row, nowrap);
 }
 
@@ -25,7 +28,7 @@
     display: flex;
     flex-direction: row nowrap;
     align-items: center;
-    width: 5rem;
+    width: max-content;
     margin-bottom: $smallPadding;
     padding: $smallPadding $bigPadding;
     background-color: $secondBGColor;
@@ -39,7 +42,7 @@
 
 .board__card_counter {
     @include flexible(center, center, row, nowrap);
-    margin: 0;
+    margin: 0 0 0 $smallPadding;
     padding: 0;
     width: $normalBtnSize;
     height: $normalBtnSize;
@@ -85,7 +88,7 @@
 .to-do-card {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 70%;
     margin-bottom: $smallPadding;
     padding: $smallPadding;
     border: 1px solid $secondBGColor;
@@ -108,11 +111,11 @@
 
 .to-do-card--bottom {
     display: flex;
-    justify-content: space-between;
 }
 
 .to-do-card--date {
     width: 45%;
+    margin-right: $smallPadding;
     padding: 0.5*$smallPadding $smallPadding;
     background-color: $smallItemsColor;
     border-radius: $borderRadiusSmall;
@@ -132,6 +135,7 @@
 
 .to-do-card--move-btn {
     background-image: url('../../img/right-pointing-arrow.svg');
+    margin-right: $smallPadding;
 }
 
 .board__add-card-btn {
@@ -149,7 +153,7 @@
     border-radius: $borderRadiusBig;
 }
 
-.card-form--close-field {
+.card-form--top-field {
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.7*$bigPadding;
