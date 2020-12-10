@@ -1,0 +1,29 @@
+// Animation
+
+.board__card_counter--tooltip {
+    position: absolute;
+    visibility: hidden;
+    background-color: $secondBGColor;
+    color: $whiteBGColor;
+    text-align: center;
+    padding: 0.3rem;
+    border-radius: $borderRadiusSmall;
+    z-index: 1;
+    font-size: 0.7rem;
+}
+
+.show {
+    visibility: visible;
+}
+
+.to-do-card--move-btn, .to-do-card--delete-btn {
+    transition: all 0.4s;
+}
+
+.to-do-card--move-btn:hover, .to-do-card--delete-btn:hover {
+    transform: scale(1.4);
+}
+
+.card-form--save-btn:hover {
+    background-color: $smallItemsColor;
+}

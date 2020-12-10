@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "SF Compact Text";
+    src: url("../../fonts/SF-Compact-Text-Bold.otf"); // font-weight: 700;
+}
+
+@font-face {
+    font-family: "SF Pro Display";
+    src: url("../../fonts/SF-Pro-Display-Medium.ttf"), // font-weight: 500;
+    url("../../fonts/SF-Pro-Display-Regular.ttf"), // font-weight: 400;
+    url("../../fonts/SF-Pro-Display-Semibold.ttf"); // font-weight: 600;
+}

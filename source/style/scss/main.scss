@@ -1,0 +1,10 @@
+@import "./config/normalize";
+@import "./config/variables";
+@import "./config/fonts";
+@import "./config/mixins";
+@import "./config/base-layout";
+
+@import "./components/header";
+@import "./components/main";
+
+@import "./config/animation";
