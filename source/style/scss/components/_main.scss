@@ -21,15 +21,15 @@
 }
 
 .board__title-bar {
-    @include flexible(space-between, center, row, nowrap);
+    @include flexible(space-between, center, row, wrap);
+    margin-bottom: $smallPadding;
 }
 
-.board__title, .board__card_counter, .board__add-card-btn, .board__to-do--delBtn {
+.board__title, .board__add-card-btn {
     display: flex;
     flex-direction: row nowrap;
     align-items: center;
     width: max-content;
-    margin-bottom: $smallPadding;
     padding: $smallPadding $bigPadding;
     background-color: $secondBGColor;
     border-radius: $borderRadiusBig;
@@ -40,19 +40,19 @@
     justify-content: space-between;
 } 
 
-.board__card_counter {
-    @include flexible(center, center, row, nowrap);
+.board--card_counter {
+    @include flexible(center, center, row, wrap);
     margin: 0 0 0 $smallPadding;
     padding: 0;
     width: $normalBtnSize;
     height: $normalBtnSize;
     border-radius: 50%;
-    background-color: $smallItemsColor;
+    background: $smallItemsColor;
     visibility: hidden;
 }
 
-.board__to-do--delBtn {
-    @include flexible(center, center, row, nowrap);
+.board--delBtn {
+    @include flexible(center, center, row, wrap);
     @include noBorderCursor;
     visibility: hidden;
     padding: 0;
@@ -67,7 +67,7 @@
     width: max-content;
 }
 
-.modal-window {
+.modal-window, .modal-window--edit {
     display: flex;
     visibility: hidden;
     position: fixed;
@@ -81,48 +81,53 @@
 }
 
 .board__cards {
+    margin: 0;
     padding: 0;
     list-style-type: none;
 }
 
-.to-do-card {
+.card {
     display: flex;
     flex-direction: column;
-    width: 70%;
-    margin-bottom: $smallPadding;
+    flex: auto;
+    margin-top: $smallPadding;
     padding: $smallPadding;
     border: 1px solid $secondBGColor;
     border-radius: $borderRadiusSmall;
     background-color: $whiteBGColor;
     overflow: hidden;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
-.to-do-card--title {
+.card--title {
     font-weight: bold;
+    cursor: text;
 }
 
-.to-do-card--desc {
+.card--desc {
     display: -webkit-box;
     height: 2.5rem;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    cursor: text;
 }
 
-.to-do-card--bottom {
+.card--bottom {
     display: flex;
+    justify-content: space-between;
+    cursor: text;
 }
 
-.to-do-card--date {
-    width: 45%;
-    margin-right: $smallPadding;
+.card--date {
+    width: fit-content;
     padding: 0.5*$smallPadding $smallPadding;
-    background-color: $smallItemsColor;
+    background: $smallItemsColor;
     border-radius: $borderRadiusSmall;
     font-size: 0.5rem;
 }
 
-.to-do-card--move-btn, .to-do-card--delete-btn {
+.card--move-btn, .card--delete-btn {
     @include noBorderCursor;
     width: $smallBtnSize;
     height: $smallBtnSize;
@@ -133,12 +138,16 @@
     opacity: 40%;
 }
 
-.to-do-card--move-btn {
+.card--move-btn {
     background-image: url('../../img/right-pointing-arrow.svg');
-    margin-right: $smallPadding;
+}
+
+.board__done--container .card--move-btn {
+    background-image: url('../../img/back-arrow.svg');
 }
 
 .board__add-card-btn {
+    margin-top: $bigPadding;
     background-color: $primaryBGColor;
     outline: none;
     cursor: pointer;

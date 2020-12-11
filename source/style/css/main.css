@@ -426,16 +426,17 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   -ms-flex-line-pack: center;
       align-content: center;
+  margin-bottom: 0.5rem;
 }
 
-.board__title, .board__card_counter, .board__add-card-btn, .board__to-do--delBtn {
+.board__title, .board__add-card-btn {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -449,7 +450,6 @@ template {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
-  margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
   background-color: #bbbbbb;
   border-radius: 1rem;
@@ -462,7 +462,7 @@ template {
           justify-content: space-between;
 }
 
-.board__card_counter {
+.board--card_counter {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -470,8 +470,8 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -482,11 +482,11 @@ template {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  background-color: yellowgreen;
+  background: linear-gradient(45deg, yellowgreen, lightgreen);
   visibility: hidden;
 }
 
-.board__to-do--delBtn {
+.board--delBtn {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -494,8 +494,8 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
-  -ms-flex-wrap: nowrap;
-      flex-wrap: nowrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -519,7 +519,7 @@ template {
   width: max-content;
 }
 
-.modal-window {
+.modal-window, .modal-window--edit {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -539,11 +539,12 @@ template {
 }
 
 .board__cards {
+  margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
-.to-do-card {
+.card {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -551,43 +552,54 @@ template {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 70%;
-  margin-bottom: 0.5rem;
+  -webkit-box-flex: 1;
+      -ms-flex: auto;
+          flex: auto;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   border: 1px solid #bbbbbb;
   border-radius: 0.5rem;
   background-color: #ffffff;
   overflow: hidden;
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
-.to-do-card--title {
+.card--title {
   font-weight: bold;
+  cursor: text;
 }
 
-.to-do-card--desc {
+.card--desc {
   display: -webkit-box;
   height: 2.5rem;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  cursor: text;
 }
 
-.to-do-card--bottom {
+.card--bottom {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  cursor: text;
 }
 
-.to-do-card--date {
-  width: 45%;
-  margin-right: 0.5rem;
+.card--date {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
   padding: 0.25rem 0.5rem;
-  background-color: yellowgreen;
+  background: linear-gradient(45deg, yellowgreen, lightgreen);
   border-radius: 0.5rem;
   font-size: 0.5rem;
 }
 
-.to-do-card--move-btn, .to-do-card--delete-btn {
+.card--move-btn, .card--delete-btn {
   border: none;
   outline: none;
   cursor: pointer;
@@ -600,12 +612,16 @@ template {
   opacity: 40%;
 }
 
-.to-do-card--move-btn {
+.card--move-btn {
   background-image: url("../../img/right-pointing-arrow.svg");
-  margin-right: 0.5rem;
+}
+
+.board__done--container .card--move-btn {
+  background-image: url("../../img/back-arrow.svg");
 }
 
 .board__add-card-btn {
+  margin-top: 1rem;
   background-color: #dddddd;
   outline: none;
   cursor: pointer;
@@ -674,7 +690,7 @@ template {
   background-color: #dddddd;
 }
 
-.board__card_counter--tooltip {
+.board--delBtn-tooltip {
   position: absolute;
   visibility: hidden;
   background-color: #bbbbbb;
@@ -700,8 +716,8 @@ template {
           transform: scale(1.4);
 }
 
-.card-form--save-btn:hover {
-  background-color: yellowgreen;
+.card-form--save-btn:hover, .board__add-card-btn:hover {
+  background: linear-gradient(45deg, yellowgreen, lightgreen);
 }
 
 @media screen and (min-width: 541px) {

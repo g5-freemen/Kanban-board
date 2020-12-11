@@ -20,30 +20,30 @@
         <div class="board__to-do--container">
             <div class="board__title-bar">
                 <div class="board__title">To do 
-                    <div class="board__card_counter"></div></div>
-                <div class="board__to-do--delBtn"></div>
-                <span class="board__card_counter--tooltip">Delete all cards</span>
+                    <div class="board--card_counter"></div></div>
+                <div class="board--delBtn"></div>
+                <span class="board--delBtn-tooltip">Delete all cards</span>
             </div> <!-- end of .board__title-bar -->
-                <ul class="board__cards"></ul>
+            <ul class="board__cards"></ul>
             <input class="board__add-card-btn" type="button" value="+ Add new">
         </div> <!-- end of .board__to-do--container -->
 
         <div class="board__in-progress--container">
             <div class="board__title-bar">
                 <div class="board__title">In progress 
-                    <div class="board__card_counter"></div></div>
-                <div class="board__to-do--delBtn"></div>
-                <span class="board__card_counter--tooltip">Delete all cards</span>
+                    <div class="board--card_counter"></div></div>
+                <div class="board--delBtn"></div>
             </div> <!-- end of .board__title-bar -->
+            <ul class="board__cards"></ul>
         </div> <!-- end of .board__in-progress--container -->
 
         <div class="board__done--container">
             <div class="board__title-bar">
                 <div class="board__title">Done 
-                    <div class="board__card_counter"></div></div>
-                <div class="board__to-do--delBtn"></div>
-                <span class="board__card_counter--tooltip">Delete all cards</span>
+                    <div class="board--card_counter"></div></div>
+                <div class="board--delBtn"></div>
             </div> <!-- end of .board__title-bar -->
+            <ul class="board__cards"></ul>
         </div> <!-- end of .board__done--container -->
 
     </main>
@@ -51,10 +51,21 @@
     <div class="modal-window">
         <form class="card-form">
             <span class="card-form--top-field">
-                <input class="card-form--title" type="text" placeholder="Enter Card Title" required>
+                <input class="card-form--title" type="text" placeholder="Enter Card Title" maxlength="27" required>
                 <button class="card-form--close-btn"></button>
             </span>
             <textarea class="card-form--desc" rows="8" cols="40" placeholder="Enter Card Description" required></textarea>
+            <input class="card-form--save-btn" type="submit" value="Save">
+        </form>
+    </div> <!-- end of .modal-window -->
+
+    <div class="modal-window--edit">
+        <form class="card-form">
+            <span class="card-form--top-field">
+                <input class="card-form--title" type="text" placeholder="Enter Card Title" maxlength="27" value='' required>
+                <button class="card-form--close-btn"></button>
+            </span>
+            <textarea class="card-form--desc" rows="8" cols="40" placeholder="Enter Card Description" value='' required></textarea>
             <input class="card-form--save-btn" type="submit" value="Save">
         </form>
     </div> <!-- end of .modal-window -->

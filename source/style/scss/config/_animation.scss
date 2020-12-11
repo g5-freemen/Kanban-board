@@ -1,6 +1,6 @@
 // Animation
 
-.board__card_counter--tooltip {
+.board--delBtn-tooltip {
     position: absolute;
     visibility: hidden;
     background-color: $secondBGColor;
@@ -24,6 +24,6 @@
     transform: scale(1.4);
 }
 
-.card-form--save-btn:hover {
-    background-color: $smallItemsColor;
+.card-form--save-btn:hover, .board__add-card-btn:hover {
+    background: $smallItemsColor;
 }
