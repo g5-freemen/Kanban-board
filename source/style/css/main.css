@@ -352,9 +352,12 @@ template {
 }
 
 .wrap {
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   font-family: "SF Pro Display";
   font-weight: 400;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  overflow: hidden;
 }
 
 .header__title {
@@ -381,13 +384,23 @@ template {
           justify-content: space-between;
   -ms-flex-line-pack: start;
       align-content: flex-start;
-  min-height: 75vh;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  min-height: -webkit-fit-content;
+  min-height: -moz-fit-content;
+  min-height: fit-content;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
   padding: 1rem;
   background-color: #dddddd;
   border-radius: 1rem;
+  font-family: "SF Pro Display";
+  overflow: hidden;
 }
 
-.board__to-do--container, .board__in-progress--container, .board__done--container {
+.board__to-do--container, .board__in-progress--container, .board__done--container, .modal-window--container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -412,6 +425,24 @@ template {
   border: 4px;
   border-style: ridge;
   border-radius: 1rem;
+  overflow: hidden;
+}
+
+.modal-window--edit {
+  cursor: url("../../img/close-icon.png"), auto;
+}
+
+.modal-window--container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  margin: 0.25rem;
+  background-color: #bbbbbb;
+  overflow: auto;
+  cursor: auto;
 }
 
 .board__in-progress--container, .board__done--container {
@@ -436,7 +467,7 @@ template {
   margin-bottom: 0.5rem;
 }
 
-.board__title, .board__add-card-btn {
+.board__title, .board__add-card-btn, .card__add-comment--button {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -453,13 +484,28 @@ template {
   padding: 0.5rem 1rem;
   background-color: #bbbbbb;
   border-radius: 1rem;
+  outline: none;
   font-weight: bold;
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .board__title {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+}
+
+#to-do-title {
+  background: #E1E4E8;
+}
+
+#in-progress-title {
+  background: #F0E7F6;
+}
+
+#done-title {
+  background: #CBDFD8;
 }
 
 .board--card_counter {
@@ -511,12 +557,7 @@ template {
   background: url("../../img/delete-btn.svg") no-repeat;
   background-size: contain;
   opacity: 40%;
-}
-
-.board__add-card-btn {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
+  border-radius: 50%;
 }
 
 .modal-window, .modal-window--edit {
@@ -565,12 +606,41 @@ template {
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
+.card--edit-field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-height: 3rem;
+  margin-bottom: 1rem;
+}
+
 .card--title {
   font-weight: bold;
   cursor: text;
 }
 
-.card--desc {
+.card--edit-title, .card--edit-desc {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid #bbbbbb;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  outline: none;
+  -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.card--desc, .card--edit-desc {
   display: -webkit-box;
   height: 2.5rem;
   -webkit-line-clamp: 2;
@@ -589,26 +659,44 @@ template {
   cursor: text;
 }
 
-.card--date {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
+.card--date, .card--edit-date {
+  width: 66%;
   padding: 0.25rem 0.5rem;
   background: linear-gradient(45deg, yellowgreen, lightgreen);
   border-radius: 0.5rem;
   font-size: 0.5rem;
 }
 
+.modal-window--container .card--edit-date {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin: 0 0 0.5rem 0;
+}
+
+.card--comments {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  margin: 0.5rem;
+}
+
 .card--move-btn, .card--delete-btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   border: none;
   outline: none;
   cursor: pointer;
   width: 1rem;
   height: 1rem;
-  background-image: url("../../img/delete-btn.svg");
+  background: url("../../img/delete-btn.svg") no-repeat;
   background-size: contain;
   background-color: #ffffff;
-  border-radius: 50%;
   opacity: 40%;
 }
 
@@ -617,7 +705,31 @@ template {
 }
 
 .board__done--container .card--move-btn {
-  background-image: url("../../img/back-arrow.svg");
+  background: url("../../img/back-arrow.svg") no-repeat;
+}
+
+.card--edit-img {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.25rem;
+  background: url("../../img/edit.svg");
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.saveImg {
+  background: url("../../img/check.svg");
+  background-size: 1rem;
+  background-repeat: no-repeat;
+  opacity: 40%;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s;
 }
 
 .board__add-card-btn {
@@ -690,6 +802,87 @@ template {
   background-color: #dddddd;
 }
 
+#usersList {
+  margin: 0.5rem;
+  padding: 0.25rem;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  border-radius: 0.5rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.prev, .next {
+  /* Slider */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: 0.8rem;
+  height: 2rem;
+  margin-top: -2rem;
+  padding: 0.5rem;
+  background-color: grey;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.5rem;
+  -webkit-transition: 0.6s ease;
+  transition: 0.6s ease;
+  border-radius: 0 0.5rem 0.5rem 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.slider-dots {
+  /* The dots */
+  position: absolute;
+  right: 3%;
+  top: 2%;
+}
+
+.dot {
+  cursor: pointer;
+  height: 0.5rem;
+  width: 0.5rem;
+  margin: 0 2px;
+  background-color: #dddddd;
+  border-radius: 50%;
+  display: inline-block;
+  -webkit-transition: background-color 0.5s ease;
+  transition: background-color 0.5s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
 .board--delBtn-tooltip {
   position: absolute;
   visibility: hidden;
@@ -706,18 +899,30 @@ template {
   visibility: visible;
 }
 
-.to-do-card--move-btn, .to-do-card--delete-btn {
-  -webkit-transition: all 0.4s;
-  transition: all 0.4s;
+.card--move-btn, .card--delete-btn {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
-.to-do-card--move-btn:hover, .to-do-card--delete-btn:hover {
+.card--move-btn:hover, .card--delete-btn:hover {
   -webkit-transform: scale(1.4);
           transform: scale(1.4);
 }
 
+.card-form--save-btn:hover, .board__add-card-btn:hover, .card__add-comment--button:hover {
+  background: linear-gradient(45deg, yellowgreen, lightgreen);
+}
+
 .card-form--save-btn:hover, .board__add-card-btn:hover {
   background: linear-gradient(45deg, yellowgreen, lightgreen);
+}
+
+.saveImg:hover {
+  opacity: 1;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 @media screen and (min-width: 541px) {
@@ -728,6 +933,23 @@ template {
   }
   .board__to-do--container, .board__in-progress--container {
     margin-right: 1rem;
+  }
+  .board {
+    width: 75%;
+  }
+  .modal-window--container {
+    -webkit-box-flex: 0.3;
+        -ms-flex: 0.3;
+            flex: 0.3;
+  }
+  .card--edit-img {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.25rem;
+    background-size: 1.5rem;
+  }
+  .prev, .next, .slider-dots {
+    display: none;
   }
 }
 /*# sourceMappingURL=main.css.map */

@@ -1,12 +1,16 @@
 .board {
     @include flexible(space-between, flex-start, row, nowrap);
-    min-height: 75vh;
+    flex: 1;
+    min-height: fit-content;
+    height: max-content;
     padding: $bigPadding;
     background-color: $primaryBGColor;
     border-radius: $borderRadiusBig;
+    font-family: "SF Pro Display";
+    overflow: hidden;
 }
 
-.board__to-do--container, .board__in-progress--container, .board__done--container {
+.board__to-do--container, .board__in-progress--container, .board__done--container, .modal-window--container {
     @include flexible(flex-start, flex-start, column, nowrap);
     flex: auto;
     height: fit-content;
@@ -14,6 +18,20 @@
     border: 4px;
     border-style: ridge;
     border-radius: $borderRadiusBig;
+    overflow: hidden;
+}
+
+.modal-window--edit {
+    cursor: url('../../img/close-icon.png'), auto;
+}
+
+.modal-window--container {
+    display: flex;
+    flex: 1;
+    margin: $smallPadding/2;
+    background-color: $secondBGColor;
+    overflow: auto;
+    cursor: auto;
 }
 
 .board__in-progress--container, .board__done--container {
@@ -25,7 +43,7 @@
     margin-bottom: $smallPadding;
 }
 
-.board__title, .board__add-card-btn {
+.board__title, .board__add-card-btn, .card__add-comment--button {
     display: flex;
     flex-direction: row nowrap;
     align-items: center;
@@ -33,12 +51,26 @@
     padding: $smallPadding $bigPadding;
     background-color: $secondBGColor;
     border-radius: $borderRadiusBig;
+    outline: none;
     font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .board__title {
     justify-content: space-between;
 } 
+
+#to-do-title {
+    background: #E1E4E8;
+}
+
+#in-progress-title {
+    background: #F0E7F6;
+}
+
+#done-title {
+    background: #CBDFD8;
+}
 
 .board--card_counter {
     @include flexible(center, center, row, wrap);
@@ -60,11 +92,8 @@
     height: $normalBtnSize;
     background: url('../../img/delete-btn.svg') no-repeat;
     background-size: contain;
-    opacity: 40%;
-}
-
-.board__add-card-btn {
-    width: max-content;
+    opacity: $opacityValue;
+    border-radius: 50%;
 }
 
 .modal-window, .modal-window--edit {
@@ -99,12 +128,31 @@
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
+.card--edit-field {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;    
+    min-height: $normalBtnSize*2;
+    margin-bottom: $bigPadding;
+}
+
 .card--title {
     font-weight: bold;
     cursor: text;
 }
 
-.card--desc {
+.card--edit-title, .card--edit-desc {
+    display: flex;
+    margin: 0;
+    padding: $smallPadding;
+    border: 1px solid $secondBGColor;
+    border-radius: $borderRadiusSmall;
+    background-color: $whiteBGColor;
+    outline: none;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.card--desc, .card--edit-desc {
     display: -webkit-box;
     height: 2.5rem;
     -webkit-line-clamp: 2;
@@ -119,23 +167,34 @@
     cursor: text;
 }
 
-.card--date {
-    width: fit-content;
-    padding: 0.5*$smallPadding $smallPadding;
+.card--date, .card--edit-date {
+    width: 66%;
+    padding: $smallPadding/2 $smallPadding;
     background: $smallItemsColor;
     border-radius: $borderRadiusSmall;
     font-size: 0.5rem;
 }
 
+.modal-window--container .card--edit-date {
+    width: max-content;
+    margin: 0 0 $smallPadding 0;    
+}
+
+.card--comments {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: $smallPadding
+}
+
 .card--move-btn, .card--delete-btn {
+    display: flex;
     @include noBorderCursor;
     width: $smallBtnSize;
     height: $smallBtnSize;
-    background-image: url('../../img/delete-btn.svg');
+    background: url('../../img/delete-btn.svg') no-repeat;
     background-size: contain;
     background-color: $whiteBGColor;
-    border-radius: 50%;
-    opacity: 40%;
+    opacity: $opacityValue;
 }
 
 .card--move-btn {
@@ -143,7 +202,26 @@
 }
 
 .board__done--container .card--move-btn {
-    background-image: url('../../img/back-arrow.svg');
+    background: url('../../img/back-arrow.svg') no-repeat;
+}
+
+.card--edit-img {
+    @include noBorderCursor;
+    display: flex;
+    width: $bigPadding *1.5;
+    height: $bigPadding *1.5;
+    margin-right: $smallPadding/2;
+    background: url('../../img/edit.svg');
+    background-repeat: no-repeat;
+    background-size: $smallBtnSize;
+}
+
+.saveImg {
+    background: url('../../img/check.svg');
+    background-size: $smallBtnSize;
+    background-repeat: no-repeat;
+    opacity: $opacityValue;
+    transition: all 0.6s;
 }
 
 .board__add-card-btn {
@@ -174,7 +252,7 @@
     height: $normalBtnSize;
     background: url('../../img/delete-btn.svg') no-repeat;
     background-size: contain;
-    opacity: 40%;
+    opacity: $opacityValue;
 }
 
 .card-form--title {
@@ -200,3 +278,60 @@
     border-radius: $borderRadiusBig;
     background-color: $primaryBGColor;
 }
+
+#usersList {
+    margin: $smallPadding;
+    padding: $smallPadding/2;
+    width: max-content;
+    border-radius: $borderRadiusSmall;
+    outline: none;
+    cursor: pointer;
+}
+
+.prev, .next {      /* Slider */
+    @include flexible(center, center, row, wrap);
+    @include noBorderCursor;
+    position: absolute;
+    top: 50%;
+    width: 0.8rem;
+    height: 2rem;
+    margin-top: -2rem;
+    padding: $smallPadding;
+    background-color: grey;
+    color: $whiteBGColor;
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: 0.6s ease;
+    border-radius: 0 $borderRadiusSmall $borderRadiusSmall 0;
+    user-select: none;
+  }
+  
+  .prev {
+      left: 0;
+  }
+
+  .next {
+    right: 0;
+    border-radius: $borderRadiusSmall 0 0 $borderRadiusSmall;
+  }
+  
+.slider-dots {      /* The dots */
+    position: absolute;
+    right: 3%;
+    top: 2%;
+}
+
+.dot {
+    cursor: pointer;
+    height: $smallBtnSize/2;
+    width: $smallBtnSize/2;
+    margin: 0 2px;
+    background-color: $primaryBGColor;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.5s ease;
+  }
+  
+  .active, .dot:hover {
+    background-color: #717171;
+  }

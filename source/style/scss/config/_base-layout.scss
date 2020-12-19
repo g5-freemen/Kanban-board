@@ -1,5 +1,7 @@
 .wrap {
-    padding: 1rem;
+    padding: $smallPadding $bigPadding;
     font-family: "SF Pro Display";
     font-weight: 400;
+    box-sizing: border-box;
+    overflow: hidden;
 }

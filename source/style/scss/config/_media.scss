@@ -8,4 +8,22 @@
         margin-right: $bigPadding;
     }
 
+    .board {
+        width: 75%;
+    }
+
+    .modal-window--container {
+        flex: 0.3;
+    }
+
+    .card--edit-img {
+        width: $bigPadding *2;
+        height: $bigPadding *2;
+        margin-right: $smallPadding/2;
+        background-size: $normalBtnSize;
+    }
+
+    .prev, .next, .slider-dots {
+        display: none;
+    }
 }
