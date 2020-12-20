@@ -8,12 +8,8 @@
         margin-right: $bigPadding;
     }
 
-    .board {
-        width: 75%;
-    }
-
     .modal-window--container {
-        flex: 0.3;
+        flex: 0.4;
     }
 
     .card--edit-img {
@@ -23,7 +19,38 @@
         background-size: $normalBtnSize;
     }
 
+    .card--desc, .card--edit-desc {
+        max-width: 16rem;
+        font-size: 0.8rem;
+    }
+
     .prev, .next, .slider-dots {
         display: none;
+    }
+}
+
+@media screen and (min-width: 760px) {
+    .board {
+        flex: 1;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .board {
+        width: 75%;
+    }
+
+    .modal-window--container {
+        flex: 0.264;
+    }
+}
+
+@media screen and (min-width: 2000px) {
+    .board {
+        width: 66%;
+    }
+
+    .modal-window--container {
+        flex: 0.24;
     }
 }

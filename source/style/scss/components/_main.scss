@@ -1,6 +1,6 @@
 .board {
-    @include flexible(space-between, flex-start, row, nowrap);
-    flex: 1;
+    @include flexible( flex-start, flex-start, row, nowrap);
+    flex: auto;
     min-height: fit-content;
     height: max-content;
     padding: $bigPadding;
@@ -15,7 +15,7 @@
     flex: auto;
     height: fit-content;
     padding: $smallPadding;
-    border: 4px;
+    border: 3px;
     border-style: ridge;
     border-radius: $borderRadiusBig;
     overflow: hidden;
@@ -23,6 +23,7 @@
 
 .modal-window--edit {
     cursor: url('../../img/close-icon.png'), auto;
+    overflow: auto;
 }
 
 .modal-window--container {
@@ -43,9 +44,9 @@
     margin-bottom: $smallPadding;
 }
 
-.board__title, .board__add-card-btn, .card__add-comment--button {
+.board__title, .board__add-card-btn, .card__add-comment--button, .card--post-comment {
     display: flex;
-    flex-direction: row nowrap;
+    flex-direction: row wrap;
     align-items: center;
     width: max-content;
     padding: $smallPadding $bigPadding;
@@ -54,6 +55,10 @@
     outline: none;
     font-weight: bold;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.card__add-comment--button {
+    margin-top: $smallPadding;
 }
 
 .board__title {
@@ -115,7 +120,7 @@
     list-style-type: none;
 }
 
-.card {
+.card, .card--comment {
     display: flex;
     flex-direction: column;
     flex: auto;
@@ -141,10 +146,11 @@
     cursor: text;
 }
 
-.card--edit-title, .card--edit-desc {
+.card--edit-title, .card--edit-desc, .card--input-comment {
     display: flex;
     margin: 0;
     padding: $smallPadding;
+    min-width: 16rem;
     border: 1px solid $secondBGColor;
     border-radius: $borderRadiusSmall;
     background-color: $whiteBGColor;
@@ -152,38 +158,121 @@
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
-.card--desc, .card--edit-desc {
+.card--desc {
     display: -webkit-box;
-    height: 2.5rem;
+    max-width: 17rem;
+    font-size: 0.9rem;
+    min-height: 1.8rem;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     cursor: text;
+    resize: none;
+}
+
+.card--edit-desc, .card--input-comment {
+    max-width: 17rem;
+    font-size: 0.9rem;
+    min-height: 1.8rem;
+    overflow: hidden;
+    cursor: text;
+    resize: none;
+}
+
+.card__add-comment {
+    display: none;
+    flex-direction: column;
+}
+
+.card--input-comment {
+    display: flex;
+    flex-flow: row wrap;
+    margin: $smallPadding 0;
+}
+
+.card--comment-bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.card--comment-bottom #usersList {
+    margin: 0 $bigPadding 0 0;
+}
+
+.card--post-comment {
+    display: flex;
+}
+
+.card--user, .card--edit-user, .card--author {
+    @include noBorderCursor;
+    position: absolute;
+    margin-top: -$bigPadding*0.85;
+    padding: $smallPadding/3 $smallPadding;
+    background-color: $userColor;
+    border-radius: $borderRadiusSmall;
+    font-size: 0.6rem;
+}
+
+.card--edit-bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.card--edit-user, .card--author {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 0;
+    width: fit-content;
+}
+
+.card--author {
+    margin: 0;
+    margin-top: $smallPadding;
+}
+
+.card--comment {
+    margin: 0;
 }
 
 .card--bottom {
     display: flex;
     justify-content: space-between;
+    margin-top: $smallPadding/2;
     cursor: text;
 }
 
 .card--date, .card--edit-date {
+    display: flex;
     width: 66%;
+    justify-content: center;
+    align-items: center;
     padding: $smallPadding/2 $smallPadding;
     background: $smallItemsColor;
     border-radius: $borderRadiusSmall;
-    font-size: 0.5rem;
+    font-size: 0.6rem;
 }
 
 .modal-window--container .card--edit-date {
-    width: max-content;
-    margin: 0 0 $smallPadding 0;    
+    width: fit-content;
+    margin-right: $bigPadding;
 }
 
 .card--comments {
     display: flex;
     flex-flow: column nowrap;
     margin: $smallPadding
+}
+
+.card--empty-comment-tooltip, .card--noUser-tooltip {
+    display: none;
+    margin: 0 0 0 $smallPadding;
+    margin-top: -$smallPadding/3;
+    color: #f00;
+    font-size: 0.8rem;
 }
 
 .card--move-btn, .card--delete-btn {
@@ -240,6 +329,12 @@
     border-radius: $borderRadiusBig;
 }
 
+label {
+    display: flex;
+    flex-direction: column;
+    color: #555555;
+}
+
 .card-form--top-field {
     display: flex;
     justify-content: space-between;
@@ -256,17 +351,24 @@
 }
 
 .card-form--title {
-    @include noBorderCursor;
-    width: 90%;
-    font-weight: bold;
+    margin-top: $smallPadding/3;
+    padding: $smallPadding;
+    border: 1px solid $primaryBGColor;
+    border-radius: $borderRadiusSmall;
+    min-width: 17rem;
+    outline: none;
+    cursor: text;
 }
 
 .card-form--desc {
+    margin-top: $smallPadding/3;
+    margin-bottom: $smallPadding;
     padding: $smallPadding;
+    border: 1px solid $primaryBGColor;
     border-radius: $borderRadiusSmall;
-    font-size: 0.9rem;
     outline: none;
-    cursor: pointer;
+    cursor: text;
+    resize: none;
 }
 
 .card-form--save-btn {
@@ -274,16 +376,20 @@
     width: 10rem ;
     max-width: 50%;
     margin-top: $bigPadding;
+    margin: 0;
     padding: $smallPadding;
     border-radius: $borderRadiusBig;
     background-color: $primaryBGColor;
 }
 
 #usersList {
-    margin: $smallPadding;
+    margin-top: $smallPadding/3;
+    margin-bottom: $smallPadding;
     padding: $smallPadding/2;
     width: max-content;
+    border: 1px solid $primaryBGColor;
     border-radius: $borderRadiusSmall;
+    font-size: 0.9rem;
     outline: none;
     cursor: pointer;
 }
@@ -295,7 +401,7 @@
     top: 50%;
     width: 0.8rem;
     height: 2rem;
-    margin-top: -2rem;
+    margin-top: -1rem;
     padding: $smallPadding;
     background-color: grey;
     color: $whiteBGColor;

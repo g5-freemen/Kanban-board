@@ -19,9 +19,11 @@ let kanbanBoard = document.querySelector('.board'),
     inProgressCardsDelBtn = inProgressBoard.querySelector('.board--delBtn'),
     doneCardsDelBtn = doneBoard.querySelector('.board--delBtn'),
     DelBtnTooltip = toDoBoard.querySelector('.board--delBtn-tooltip'),
+    postCommentBtn = document.querySelector('.card--post-comment'),
     toDoCardsArray = [],
     inProgressCardsArray = [],
     doneCardsArray = [],
+    commentsArray = [],
     maxInProgressCards = 5,
     mobileWidthUI = 541;
 
@@ -49,14 +51,22 @@ function calcBoardHeight() { //calculate and set height of board (depends of con
     };
 }
 
-function loadCards(cardsName, toPlace, number) { // Load cards from LS
+function loadCards(cardsName, toPlace, number) { // Load cards from localStorage
     if (localStorage[cardsName]) {
         let cardsList = JSON.parse( localStorage[cardsName] );
         for (let item of cardsList) {
-            toPlace.append( createCard(item.date, item.title, item.desc, item.id, number) );
+            toPlace.append( createCard(item.date, item.title, item.desc, item.id, item.user, number) );
     } };
     calcBoardHeight();
 };
+
+function loadComments() { // Load comments from localStorage
+    if (localStorage['comments']) {
+        let commentsList = JSON.parse( localStorage['comments'] );
+        for (let item of commentsList) {
+            commentsArray.push( item ); // add comments to commentsArray
+    } };
+}
 
 function refreshBoard() {
     clearColumn(toDoCardsArray, toDoCards, '');
@@ -65,23 +75,27 @@ function refreshBoard() {
     loadCards('toDoCards', toDoCards, 1);
     loadCards('inProgressCards', inProgressCards, 2);
     loadCards('doneCards', doneCards, 3);
+    setUserNamePosition(doneCards);
+    setUserNamePosition(toDoCards);
+    setUserNamePosition(inProgressCards);
 };
 
-function createCard(date, title, desc, idCard, number) {
+function createCard(date, title, desc, idCard, user, number) {
     let card = document.createElement('li');
     card.className = "card";
     card.id = +idCard;
     card.append(createCardElement('span', title, 'title'));
     card.append(createCardElement('div', desc, 'desc'));
+    card.append(createCardElement('span', user, 'user'));
     let bottomBlock = document.createElement('div');
     bottomBlock.className = "card--bottom";
     bottomBlock.append(createCardElement('span', date, 'date'));
     bottomBlock.append(createCardElement('button', '', 'delete-btn'));
     bottomBlock.append(createCardElement('button', '', 'move-btn'));
     card.append(bottomBlock);
-    if (number===1) toDoCardsArray.push( {title, desc, date, id:(+card.id)} );
-    if (number===2) inProgressCardsArray.push( {title, desc, date, id:(+card.id)} );
-    if (number===3) doneCardsArray.push( {title, desc, date, id:(+card.id)} );
+    if (number===1) toDoCardsArray.push( {title, desc, date, id:(+card.id), user} );
+    if (number===2) inProgressCardsArray.push( {title, desc, date, id:(+card.id), user} );
+    if (number===3) doneCardsArray.push( {title, desc, date, id:(+card.id), user} );
     showCardsCounter();
     return card;
 };
@@ -127,7 +141,7 @@ function showCardsCounter() { // show all counters of cards
 function closeModalWindow() {
     let formNewCard = document.querySelector('.card-form');
     formNewCard.reset();
-    modalWindow.style.visibility = 'hidden';
+    location.reload();
 };
 
 function clearColumn(array, cardsHTML, cardsLS) { // clear column
@@ -137,29 +151,48 @@ function clearColumn(array, cardsHTML, cardsLS) { // clear column
     showCardsCounter();
 };
 
-function showEditCard(id,title,desc,date, column) { // show modal window to edit card
+function showEditCard(id,title,desc,date, column, user) { // show modal window to edit card
     modalWindowEdit.style.visibility = 'visible';
     modalWindowEdit.querySelector('.card--edit-title').value = title;
     modalWindowEdit.querySelector('.card--edit-title').id = column;
     modalWindowEdit.querySelector('.card--edit-desc').innerHTML = desc;
     modalWindowEdit.querySelector('.card--edit-date').innerHTML = date;
     modalWindowEdit.querySelector('.card--edit-date').id = id;
+    modalWindowEdit.querySelector('.card--edit-user').innerHTML = user
 };
 
 let getUsers = (url) => fetch(`${url}`)     // load users list from URL
 .then(response => response.json())
 .then(result => {
     for(let item of result) {
-        usersList.append( createCardElement('option', item.name, '', item.name ));
+        usersList.append( createCardElement('option', item.name, '', item.name )); // <option> innerHTML & value = name 
     }
 } );
+
+function loadCommentsFromArray(id) {
+    for (let i = 0; i < commentsArray.length; i++) {
+        console.log(id, commentsArray[i].id );
+        if(commentsArray[i].id === id) {
+            document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].user, 'author'));
+            document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].comment, 'comment'));
+        }
+    }
+}
 
 //#endregion
 //#region Listeners & etc.
 
 getUsers('https://jsonplaceholder.typicode.com/users');
-
 refreshBoard();
+loadComments();
+
+function setUserNamePosition(column) { // set left margin of every userName in every card
+    let cardsInColumn = column.getElementsByClassName('card--user'),
+        columnWidth = column.querySelector('.card--title');
+    for (let element of cardsInColumn) {
+        element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth) + 'px';
+    }
+};
 
 kanbanBoard.addEventListener('mouseover', event => { // show tooltip if mouseover X button
     if(event.target.className === 'board--delBtn' ) {
@@ -177,7 +210,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
     if( event.target.className === 'card--title' || event.target.className === 'card--desc' // edit card
         || event.target.className === 'card--bottom' || event.target.className === 'card--date') {
         let card = event.target.closest('.card');
-        let cardID = card.id;
+        let cardID = +card.id;
         let column;
         let cardColumn = card.closest('div').className;
         if (cardColumn == 'board__to-do--container') column='toDoCards';
@@ -186,7 +219,9 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         let cardTitle = card.querySelector('.card--title').innerHTML;
         let cardDesc = card.querySelector('.card--desc').innerHTML;
         let cardDate = card.querySelector('.card--date').innerHTML;
-        showEditCard(cardID, cardTitle, cardDesc, cardDate, column);
+        let user = card.querySelector('.card--user').innerHTML;
+        showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
+        loadCommentsFromArray(cardID);
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
@@ -238,6 +273,9 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         };
     };
     calcBoardHeight();
+    setUserNamePosition(toDoCards);
+    setUserNamePosition(doneCards);
+    setUserNamePosition(inProgressCards);
 } ) // end of kanbanBoard.addEventListener
 
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
@@ -248,16 +286,18 @@ modalWindow.addEventListener('submit', event => {   // form submit Btn create ne
     let formNewCard = document.querySelector('.card-form');
     event.preventDefault();
     let date = new Date();
-    let DateTime = date.getDate() +"/"+ date.getMonth() +"/"+ date.getFullYear();
-    if (+date.getMinutes() < 10 ) {DateTime += " - "+ date.getHours() +':0'+date.getMinutes()}
-    else {DateTime += " - "+ date.getHours() +':'+date.getMinutes()};
-    let toDoCardTitle = formNewCard.querySelector('.card-form--title').value;
-    let toDoCardDesc = formNewCard.querySelector('.card-form--desc').value;
+    let dateTime = date.getDate() +"/"+ date.getMonth() +"/"+ date.getFullYear();
+    if (+date.getMinutes() < 10 ) {dateTime += " - "+ date.getHours() +':0'+date.getMinutes()}
+    else {dateTime += " - "+ date.getHours() +':'+date.getMinutes()};
+    let cardTitle = formNewCard.querySelector('.card-form--title').value;
+    let cardDesc = formNewCard.querySelector('.card-form--desc').value;
+    let cardUser = formNewCard.querySelector('#usersList').value;
     let timerIDgen = new Date();
     let cardId = timerIDgen.getMinutes() * timerIDgen.getMilliseconds();
-    toDoCards.append ( createCard(DateTime, toDoCardTitle, toDoCardDesc, cardId, 1) );
+    toDoCards.append ( createCard(dateTime, cardTitle, cardDesc, cardId, cardUser, 1) );
     localStorage.setItem('toDoCards', JSON.stringify(toDoCardsArray));
     closeModalWindow();
+    refreshBoard();
     calcBoardHeight();
 } );
 
@@ -265,11 +305,22 @@ closeModalWindowBtn.addEventListener('click', closeModalWindow); // close modal 
 
 modalWindowEdit.addEventListener('click', event => {    
     if (!event.target.closest('.modal-window--container')) {// close cardEdit modal window if click outside it
-        modalWindowEdit.style.visibility = 'hidden';
-    } else {
+        location.reload();
+    } else { // else click inside cardEdit
     let editDesc = 'card--edit-img edit-desc',
         editTitle = 'card--edit-img edit-title',
         columnID = document.querySelector('.card--edit-title').id;
+
+    function updateCard(column,array,thing) {
+        if (columnID==column) {
+            array.forEach(item => {
+                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
+                    item[thing] = modalWindowEdit.querySelector('.card--edit-'+thing).value;
+                    localStorage.setItem(columnID, JSON.stringify(array));
+                } } )
+        }
+    };
+
     if (event.target.className === editDesc) { // if press editBtn (near description) => edit description
         modalWindowEdit.querySelector('.card--edit-desc').readOnly = false ;
         modalWindowEdit.querySelector('.card--edit-desc').focus();
@@ -283,54 +334,47 @@ modalWindowEdit.addEventListener('click', event => {
     else if (event.target.className === editTitle+' saveImg') { //save new title (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-title').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-title').classList.remove('saveImg');
-        if (columnID=='toDoCards') {
-            toDoCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.title = modalWindowEdit.querySelector('.card--edit-title').value;
-                    localStorage.setItem(columnID, JSON.stringify(toDoCardsArray));
-                } } )
-        }
-        if (columnID=='inProgressCards') {
-            inProgressCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.title = modalWindowEdit.querySelector('.card--edit-title').value;
-                    localStorage.setItem(columnID, JSON.stringify(inProgressCardsArray));
-                } } )
-        }
-        if (columnID=='doneCards'){
-            doneCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.title = modalWindowEdit.querySelector('.card--edit-title').value;
-                    localStorage.setItem(columnID, JSON.stringify(doneCardsArray));
-                } } )
-        }
+        updateCard('toDoCards',toDoCardsArray, 'title');
+        updateCard('inProgressCards',inProgressCardsArray, 'title');
+        updateCard('doneCards',doneCardsArray, 'title');
         refreshBoard();
     }
     else if (event.target.className === editDesc+' saveImg') { //save new description (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-desc').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-desc').classList.remove('saveImg');
-        if (columnID=='toDoCards') {
-            toDoCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.desc = modalWindowEdit.querySelector('.card--edit-desc').value;
-                    localStorage.setItem(columnID, JSON.stringify(toDoCardsArray));
-                } } )
-        }
-        if (columnID=='inProgressCards') {
-            inProgressCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.desc = modalWindowEdit.querySelector('.card--edit-desc').value;
-                    localStorage.setItem(columnID, JSON.stringify(inProgressCardsArray));
-                } } )
-        }
-        if (columnID=='doneCards'){
-            doneCardsArray.forEach(item => {
-                if (item.id === +modalWindowEdit.querySelector('.card--edit-date').id) {
-                    item.desc = modalWindowEdit.querySelector('.card--edit-desc').value;
-                    localStorage.setItem(columnID, JSON.stringify(doneCardsArray));
-                } } )
-        }
+        updateCard('toDoCards',toDoCardsArray, 'desc')
+        updateCard('inProgressCards',inProgressCardsArray, 'desc');
+        updateCard('doneCards',doneCardsArray, 'desc');
         refreshBoard();
+    } else if (event.target.className === 'card__add-comment--button') { // press Add Comment btn
+        modalWindowEdit.querySelector('.card__add-comment--button').style.display = 'none';
+        modalWindowEdit.querySelector('.card__add-comment').style.display = 'flex';
+        modalWindowEdit.querySelector('.card--comment-usersList').append (usersList) ;
+    } else if (event.target.className === 'card--post-comment') { // press POST comment btn
+        if (modalWindowEdit.querySelector('#usersList').value &&
+         modalWindowEdit.querySelector('.card--input-comment').value) {
+            let comment = modalWindowEdit.querySelector('.card--input-comment').value,
+                user = modalWindowEdit.querySelector('#usersList').value,
+                id = +modalWindowEdit.querySelector('.card--edit-date').id;
+                commentsArray.push({id, user, comment});
+                localStorage.setItem('comments', JSON.stringify(commentsArray));
+                modalWindowEdit.querySelector('.card__add-comment--button').style.display = 'flex';
+                modalWindowEdit.querySelector('.card__add-comment').style.display = 'none';
+                modalWindowEdit.querySelector('#usersList').value = '';
+                modalWindowEdit.querySelector('.card--input-comment').value = '';
+                document.querySelector('.card--comments').innerHTML = '';
+                loadCommentsFromArray(id);
+        } else if (!modalWindowEdit.querySelector('#usersList').value) { // tooltip if user not selected
+            modalWindowEdit.querySelector('.card--noUser-tooltip').style.display = 'flex';
+            setTimeout(() => {
+                modalWindowEdit.querySelector('.card--noUser-tooltip').style.display = 'none';
+            }, 3000);
+        } else { // tooltip if empty comment
+            modalWindowEdit.querySelector('.card--empty-comment-tooltip').style.display = 'flex';
+            setTimeout(() => {
+                modalWindowEdit.querySelector('.card--empty-comment-tooltip').style.display = 'none';
+            }, 3000);
+        }
     }
 }} );
 
@@ -367,6 +411,9 @@ function showSlides(n) {
     if (slideIndex === 2) inProgressBoard.style.display = "flex";
     if (slideIndex === 3) doneBoard.style.display = "flex";
     calcBoardHeight();
+    setUserNamePosition(toDoCards);
+    setUserNamePosition(inProgressCards);
+    setUserNamePosition(doneCards);
 
     dots[slideIndex-1].className += " active"; //make slider dot number n -> active
 }

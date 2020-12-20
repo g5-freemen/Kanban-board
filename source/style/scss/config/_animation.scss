@@ -22,10 +22,7 @@
     transform: scale(1.4);
 }
 
-.card-form--save-btn:hover, .board__add-card-btn:hover, .card__add-comment--button:hover {
-    background: $smallItemsColor;
-}
-
+.card--post-comment:hover, .card__add-comment--button:hover,
 .card-form--save-btn:hover, .board__add-card-btn:hover {
     background: $smallItemsColor;
 }
