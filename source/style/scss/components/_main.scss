@@ -12,7 +12,7 @@
 
 .board__to-do--container, .board__in-progress--container, .board__done--container, .modal-window--container {
     @include flexible(flex-start, flex-start, column, nowrap);
-    flex: auto;
+    flex: 1;
     height: fit-content;
     padding: $smallPadding;
     border: 3px;
@@ -168,7 +168,6 @@
 
 .card--desc {
     display: -webkit-box;
-    max-width: 17rem;
     font-size: 0.9rem;
     min-height: 1.8rem;
     -webkit-line-clamp: 2;

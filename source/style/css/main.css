@@ -416,8 +416,8 @@ template {
   -ms-flex-line-pack: start;
       align-content: flex-start;
   -webkit-box-flex: 1;
-      -ms-flex: auto;
-          flex: auto;
+      -ms-flex: 1;
+          flex: 1;
   height: -webkit-fit-content;
   height: -moz-fit-content;
   height: fit-content;
@@ -662,7 +662,6 @@ template {
 
 .card--desc {
   display: -webkit-box;
-  max-width: 17rem;
   font-size: 0.9rem;
   min-height: 1.8rem;
   -webkit-line-clamp: 2;
@@ -1118,7 +1117,7 @@ label {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1000px) {
   .slider {
     display: none;
   }
