@@ -1085,6 +1085,20 @@ label {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+@media screen and (max-width: 412px) {
+  .modal-window--container {
+    -webkit-transform: scale(0.93);
+            transform: scale(0.93);
+  }
+}
+
+@media screen and (max-width: 281px) {
+  .modal-window--container {
+    -webkit-transform: scale(0.81);
+            transform: scale(0.81);
+  }
+}
+
 @media screen and (min-width: 541px) {
   .board__to-do--container, .board__in-progress--container {
     margin-right: 1rem;
