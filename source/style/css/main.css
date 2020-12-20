@@ -430,7 +430,11 @@ template {
 
 .modal-window--edit {
   cursor: url("../../img/close-icon.png"), auto;
-  overflow: auto;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .modal-window--container {
@@ -440,9 +444,16 @@ template {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+  min-width: -webkit-fit-content;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+  min-height: -webkit-fit-content;
+  min-height: -moz-fit-content;
+  min-height: fit-content;
   margin: 0.25rem;
   background-color: #bbbbbb;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   cursor: auto;
 }
 
@@ -574,14 +585,17 @@ template {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
   top: 0;
   left: 0;
   bottom: 0;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-window {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .board__cards {
@@ -719,6 +733,7 @@ template {
   background-color: darkseagreen;
   border-radius: 0.5rem;
   font-size: 0.6rem;
+  cursor: default;
 }
 
 .card--edit-bottom {
@@ -1072,11 +1087,6 @@ label {
 }
 
 @media screen and (min-width: 541px) {
-  .board__in-progress--container, .board__done--container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-  }
   .board__to-do--container, .board__in-progress--container {
     margin-right: 1rem;
   }
@@ -1095,27 +1105,44 @@ label {
     max-width: 16rem;
     font-size: 0.8rem;
   }
-  .prev, .next, .slider-dots {
-    display: none;
-  }
 }
 
 @media screen and (min-width: 760px) {
   .board {
-    -webkit-box-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
+    width: 66%;
+  }
+  .modal-window--container {
+    -webkit-box-flex: 0.5;
+        -ms-flex: 0.5;
+            flex: 0.5;
   }
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1024px) {
+  .slider {
+    display: none;
+  }
   .board {
-    width: 75%;
+    -webkit-box-flex: 1;
+        -ms-flex: auto;
+            flex: auto;
+    width: auto;
+  }
+  .board__in-progress--container, .board__done--container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
   }
   .modal-window--container {
     -webkit-box-flex: 0.264;
         -ms-flex: 0.264;
             flex: 0.264;
+  }
+}
+
+@media screen and (min-width: 1600px) {
+  .board {
+    width: 75%;
   }
 }
 

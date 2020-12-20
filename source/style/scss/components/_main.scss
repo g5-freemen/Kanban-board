@@ -23,15 +23,20 @@
 
 .modal-window--edit {
     cursor: url('../../img/close-icon.png'), auto;
-    overflow: auto;
+    align-items: flex-start;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .modal-window--container {
     display: flex;
     flex: 1;
+    min-width: fit-content;
+    min-height: fit-content;
     margin: $smallPadding/2;
     background-color: $secondBGColor;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
     cursor: auto;
 }
 
@@ -106,12 +111,15 @@
     visibility: hidden;
     position: fixed;
     justify-content: center;
-    align-items: center;
     top: 0;
     left: 0;
     bottom: 0;
     width: 100%;
     background:  rgba(0, 0, 0, 0.5);
+}
+
+.modal-window {
+    align-items: center;
 }
 
 .board__cards {
@@ -212,6 +220,7 @@
     background-color: $userColor;
     border-radius: $borderRadiusSmall;
     font-size: 0.6rem;
+    cursor: default;
 }
 
 .card--edit-bottom {

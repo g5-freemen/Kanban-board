@@ -25,7 +25,9 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsArray = [],
     commentsArray = [],
     maxInProgressCards = 5,
-    mobileWidthUI = 541;
+    mobileWidthUI = 1024,
+    screenWidth = document.documentElement.clientWidth,
+    screenHeight = document.documentElement.clientHeight;
 
 //#region Functions
 
@@ -158,20 +160,28 @@ function showEditCard(id,title,desc,date, column, user) { // show modal window t
     modalWindowEdit.querySelector('.card--edit-desc').innerHTML = desc;
     modalWindowEdit.querySelector('.card--edit-date').innerHTML = date;
     modalWindowEdit.querySelector('.card--edit-date').id = id;
-    modalWindowEdit.querySelector('.card--edit-user').innerHTML = user
+    modalWindowEdit.querySelector('.card--edit-user').innerHTML = user;
+    if (column == 'inProgressCards' || column == 'doneCards') { // no add comments btn in this columns
+        document.querySelector('.card__add-comment--button').style.display = 'none';
+        document.querySelector('.card--edit-img.edit-title').style.display = 'none';
+        document.querySelector('.card--edit-img.edit-desc').style.display = 'none';
+    } else {
+        document.querySelector('.card__add-comment--button').style.display = 'flex';
+        document.querySelector('.card--edit-img.edit-title').style.display = 'flex';
+        document.querySelector('.card--edit-img.edit-desc').style.display = 'flex';
+    }
 };
 
 let getUsers = (url) => fetch(`${url}`)     // load users list from URL
 .then(response => response.json())
 .then(result => {
     for(let item of result) {
-        usersList.append( createCardElement('option', item.name, '', item.name )); // <option> innerHTML & value = name 
+        usersList.append( createCardElement('option', item.name, '', item.name )); // <option> innerHTML & value = name
     }
 } );
 
 function loadCommentsFromArray(id) {
     for (let i = 0; i < commentsArray.length; i++) {
-        console.log(id, commentsArray[i].id );
         if(commentsArray[i].id === id) {
             document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].user, 'author'));
             document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].comment, 'comment'));
@@ -182,6 +192,12 @@ function loadCommentsFromArray(id) {
 //#endregion
 //#region Listeners & etc.
 
+setInterval(() => { // refresh page on screen resize
+    if ( screenWidth !== document.documentElement.clientWidth ||
+         screenHeight !== document.documentElement.clientHeight )
+    {location.reload()}
+}, 99);
+
 getUsers('https://jsonplaceholder.typicode.com/users');
 refreshBoard();
 loadComments();
@@ -190,7 +206,7 @@ function setUserNamePosition(column) { // set left margin of every userName in e
     let cardsInColumn = column.getElementsByClassName('card--user'),
         columnWidth = column.querySelector('.card--title');
     for (let element of cardsInColumn) {
-        element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth) + 'px';
+        element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth)-20 + 'px';
     }
 };
 
@@ -222,6 +238,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         let user = card.querySelector('.card--user').innerHTML;
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
+        document.querySelector('.slider').style.display = 'none';
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
@@ -277,6 +294,15 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
     setUserNamePosition(doneCards);
     setUserNamePosition(inProgressCards);
 } ) // end of kanbanBoard.addEventListener
+
+// if (+document.documentElement.clientHeight <= +mobileWidthUI) {.onresize(function(){
+//     calcBoardHeight();
+//     setUserNamePosition(toDoCards);
+//     setUserNamePosition(doneCards);
+//     setUserNamePosition(inProgressCards);
+//     alert('resize');
+//     location.reload();
+// })
 
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
     modalWindow.style.visibility = "visible";
@@ -382,7 +408,7 @@ modalWindowEdit.addEventListener('click', event => {
 //#region Slider 
 
 let slideIndex = 1;
-if (document.documentElement.clientHeight < mobileWidthUI) {
+if (+document.documentElement.clientWidth <= +mobileWidthUI) {
     showSlides(slideIndex);
 }
 
