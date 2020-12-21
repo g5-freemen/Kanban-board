@@ -457,6 +457,15 @@ template {
   cursor: auto;
 }
 
+.modal-window--container .card-form--close-btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 .board__in-progress--container, .board__done--container {
   display: none;
 }
@@ -638,6 +647,15 @@ template {
           align-items: center;
   min-height: 3rem;
   margin-bottom: 1rem;
+}
+
+.space-between {
+  margin: 0;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  font-size: 1.4rem;
+  font-weight: bolder;
 }
 
 .card--title {
@@ -1090,12 +1108,36 @@ label {
     -webkit-transform: scale(0.93);
             transform: scale(0.93);
   }
+  .card-form {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    -webkit-transform: scale(0.93);
+            transform: scale(0.93);
+  }
+}
+
+@media screen and (max-width: 321px) {
+  .card-form {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    -webkit-transform: scale(0.83);
+            transform: scale(0.83);
+  }
 }
 
 @media screen and (max-width: 281px) {
   .modal-window--container {
     -webkit-transform: scale(0.81);
             transform: scale(0.81);
+  }
+  .card-form {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    -webkit-transform: scale(0.7);
+            transform: scale(0.7);
   }
 }
 
@@ -1137,8 +1179,8 @@ label {
   }
   .board {
     -webkit-box-flex: 1;
-        -ms-flex: auto;
-            flex: auto;
+        -ms-flex: 1;
+            flex: 1;
     width: auto;
   }
   .board__in-progress--container, .board__done--container {
@@ -1151,11 +1193,26 @@ label {
         -ms-flex: 0.264;
             flex: 0.264;
   }
+  .card-form {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+  }
 }
 
 @media screen and (min-width: 1600px) {
   .board {
     width: 75%;
+  }
+  .modal-window--container {
+    -webkit-box-flex: 0.17;
+        -ms-flex: 0.17;
+            flex: 0.17;
+  }
+  .card-form {
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
   }
 }
 
@@ -1164,9 +1221,9 @@ label {
     width: 66%;
   }
   .modal-window--container {
-    -webkit-box-flex: 0.24;
-        -ms-flex: 0.24;
-            flex: 0.24;
+    -webkit-box-flex: 0.1;
+        -ms-flex: 0.1;
+            flex: 0.1;
   }
 }
 /*# sourceMappingURL=main.css.map */

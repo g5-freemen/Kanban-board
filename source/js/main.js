@@ -25,7 +25,7 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsArray = [],
     commentsArray = [],
     maxInProgressCards = 5,
-    mobileWidthUI = 1024,
+    mobileWidthUI = 999,
     screenWidth = document.documentElement.clientWidth,
     screenHeight = document.documentElement.clientHeight;
 
@@ -206,7 +206,7 @@ function setUserNamePosition(column) { // set left margin of every userName in e
     let cardsInColumn = column.getElementsByClassName('card--user'),
         columnWidth = column.querySelector('.card--title');
     for (let element of cardsInColumn) {
-        element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth)-20 + 'px';
+        element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth)-10 + 'px';
     }
 };
 
@@ -295,15 +295,6 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
     setUserNamePosition(inProgressCards);
 } ) // end of kanbanBoard.addEventListener
 
-// if (+document.documentElement.clientHeight <= +mobileWidthUI) {.onresize(function(){
-//     calcBoardHeight();
-//     setUserNamePosition(toDoCards);
-//     setUserNamePosition(doneCards);
-//     setUserNamePosition(inProgressCards);
-//     alert('resize');
-//     location.reload();
-// })
-
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
     modalWindow.style.visibility = "visible";
 } );
@@ -330,7 +321,8 @@ modalWindow.addEventListener('submit', event => {   // form submit Btn create ne
 closeModalWindowBtn.addEventListener('click', closeModalWindow); // close modal window if click closeBtn
 
 modalWindowEdit.addEventListener('click', event => {    
-    if (!event.target.closest('.modal-window--container')) {// close cardEdit modal window if click outside it
+    if (!event.target.closest('.modal-window--container') || // close cardEdit modal window if click outside it
+        event.target.className === 'card-form--close-btn') { // close cardEdit modal window if click closeBtn
         location.reload();
     } else { // else click inside cardEdit
     let editDesc = 'card--edit-img edit-desc',
