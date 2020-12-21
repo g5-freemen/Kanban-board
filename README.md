@@ -1,5 +1,5 @@
 # Kanban-board 
-(https://g5-freemen.github.io/Kanban-board/)
+https://g5-freemen.github.io/Kanban-board/
 
 ## A board to keep track of your tasks
 
