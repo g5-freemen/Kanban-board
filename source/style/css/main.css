@@ -488,7 +488,8 @@ template {
   margin-bottom: 0.5rem;
 }
 
-.board__title, .board__add-card-btn, .card__add-comment--button, .card--post-comment {
+.board__title, .board__add-card-btn, .card__add-comment--button, .card--post-comment,
+#deleteInProgressCards, #notDeleteInProgressCards {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -585,7 +586,7 @@ template {
   border-radius: 50%;
 }
 
-.modal-window, .modal-window--edit {
+.modal-window, .modal-window--edit, .modal-window--confirm {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -601,7 +602,7 @@ template {
   background: rgba(0, 0, 0, 0.5);
 }
 
-.modal-window {
+.modal-window, .modal-window--confirm {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -649,13 +650,30 @@ template {
   margin-bottom: 1rem;
 }
 
-.space-between {
+.space-between, .confirm-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   margin: 0;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   font-size: 1.4rem;
   font-weight: bolder;
+}
+
+.center {
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+}
+
+.confirm-text {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0.5rem 0 1rem;
+  text-shadow: 0.5rem 0.5rem 0.5rem rgba(0, 0, 0, 0.5);
 }
 
 .card--title {
@@ -1091,7 +1109,8 @@ label {
 }
 
 .card--post-comment:hover, .card__add-comment--button:hover,
-.card-form--save-btn:hover, .board__add-card-btn:hover {
+.card-form--save-btn:hover, .board__add-card-btn:hover,
+#deleteInProgressCards:hover, #notDeleteInProgressCards:hover {
   background: linear-gradient(45deg, yellowgreen, lightgreen);
 }
 

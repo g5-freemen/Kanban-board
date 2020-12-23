@@ -23,7 +23,8 @@
 }
 
 .card--post-comment:hover, .card__add-comment--button:hover,
-.card-form--save-btn:hover, .board__add-card-btn:hover {
+.card-form--save-btn:hover, .board__add-card-btn:hover,
+#deleteInProgressCards:hover, #notDeleteInProgressCards:hover {
     background: $smallItemsColor;
 }
 

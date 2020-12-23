@@ -12,6 +12,7 @@ let kanbanBoard = document.querySelector('.board'),
     closeModalWindowBtn = document.querySelector('.card-form--close-btn'),
     modalWindowEdit = document.querySelector('.modal-window--edit'),
     modalWindowEditContainer = modalWindowEdit.querySelector('.modal-window--container'),
+    modalWindowConfirm = document.querySelector('.modal-window--confirm'),
     toDoCardsCounter = toDoBoard.querySelector('.board--card_counter'),
     inProgressCardsCounter = inProgressBoard.querySelector('.board--card_counter'),
     doneCardsCounter = doneBoard.querySelector('.board--card_counter'),
@@ -180,13 +181,19 @@ let getUsers = (url) => fetch(`${url}`)     // load users list from URL
     }
 } );
 
-function loadCommentsFromArray(id) {
+function loadCommentsFromArray(id) { // add comments from array to editCard
     for (let i = 0; i < commentsArray.length; i++) {
         if(commentsArray[i].id === id) {
             document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].user, 'author'));
             document.querySelector('.card--comments').append(createCardElement('span', commentsArray[i].comment, 'comment'));
         }
     }
+}
+
+function checkWindowOverflow() { // if editCard window's height too big -> change window position
+    if (modalWindowEditContainer.clientHeight > 0.9 * document.documentElement.clientHeight) {
+        modalWindowEdit.style.alignItems = 'flex-start';
+    } else {modalWindowEdit.style.alignItems = 'center';}
 }
 
 //#endregion
@@ -239,19 +246,16 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
         document.querySelector('.slider').style.display = 'none';
+        checkWindowOverflow();
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
         if (event.target.closest('.board__to-do--container')) {
-            clearColumn(toDoCardsArray, toDoCards, 'toDoCards'); //clear array, html, localstorage
-        }
-        if (event.target.closest('.board__in-progress--container')) {
-            if (confirm('Delete all Cards?')) {
-                clearColumn(inProgressCardsArray, inProgressCards, 'inProgressCards'); //clear array, html, localstorage
-            }
-        }
-        if (event.target.closest('.board__done--container')) {
-            clearColumn(doneCardsArray, doneCards, 'doneCards'); //clear array, html, localstorage
+            clearColumn(toDoCardsArray, toDoCards, 'toDoCards'); // clear array, html, localstorage
+        } else if (event.target.closest('.board__in-progress--container')) {
+            modalWindowConfirm.style.visibility = 'visible'; // call confirmWindow to clear column
+        } else if (event.target.closest('.board__done--container')) {
+            clearColumn(doneCardsArray, doneCards, 'doneCards'); // clear array, html, localstorage
         }
     };
 
@@ -349,7 +353,8 @@ modalWindowEdit.addEventListener('click', event => {
         modalWindowEdit.querySelector('.card--edit-title').focus();
         modalWindowEdit.querySelector('.card--edit-img.edit-title').classList.add('saveImg');
     }
-    else if (event.target.className === editTitle+' saveImg') { //save new title (press saveBtn)
+    else if (event.target.className === editTitle+' saveImg' &&
+    modalWindowEdit.querySelector('.card--edit-title').value) { //save new title (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-title').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-title').classList.remove('saveImg');
         updateCard('toDoCards',toDoCardsArray, 'title');
@@ -357,7 +362,8 @@ modalWindowEdit.addEventListener('click', event => {
         updateCard('doneCards',doneCardsArray, 'title');
         refreshBoard();
     }
-    else if (event.target.className === editDesc+' saveImg') { //save new description (press saveBtn)
+    else if (event.target.className === editDesc+' saveImg' &&
+    modalWindowEdit.querySelector('.card--edit-desc').value) { //save new description (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-desc').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-desc').classList.remove('saveImg');
         updateCard('toDoCards',toDoCardsArray, 'desc')
@@ -382,6 +388,7 @@ modalWindowEdit.addEventListener('click', event => {
                 modalWindowEdit.querySelector('.card--input-comment').value = '';
                 document.querySelector('.card--comments').innerHTML = '';
                 loadCommentsFromArray(id);
+                checkWindowOverflow();
         } else if (!modalWindowEdit.querySelector('#usersList').value) { // tooltip if user not selected
             modalWindowEdit.querySelector('.card--noUser-tooltip').style.display = 'flex';
             setTimeout(() => {
@@ -395,6 +402,15 @@ modalWindowEdit.addEventListener('click', event => {
         }
     }
 }} );
+
+modalWindowConfirm.addEventListener('click', event => {
+    if (event.target.id === 'deleteInProgressCards') {
+        clearColumn(inProgressCardsArray, inProgressCards, 'inProgressCards'); //clear array, html, localstorage
+        location.reload();
+    } else if (event.target.id === 'notDeleteInProgressCards') {
+        location.reload();
+    }
+})
 
 //#endregion
 //#region Slider 

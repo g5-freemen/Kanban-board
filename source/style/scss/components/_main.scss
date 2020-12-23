@@ -54,7 +54,8 @@
     margin-bottom: $smallPadding;
 }
 
-.board__title, .board__add-card-btn, .card__add-comment--button, .card--post-comment {
+.board__title, .board__add-card-btn, .card__add-comment--button, .card--post-comment,
+ #deleteInProgressCards, #notDeleteInProgressCards {
     display: flex;
     flex-direction: row wrap;
     align-items: center;
@@ -111,7 +112,7 @@
     border-radius: 50%;
 }
 
-.modal-window, .modal-window--edit {
+.modal-window, .modal-window--edit, .modal-window--confirm {
     display: flex;
     visibility: hidden;
     position: fixed;
@@ -123,7 +124,7 @@
     background:  rgba(0, 0, 0, 0.5);
 }
 
-.modal-window {
+.modal-window, .modal-window--confirm {
     align-items: center;
 }
 
@@ -154,11 +155,22 @@
     margin-bottom: $bigPadding;
 }
 
-.space-between {
+.space-between, .confirm-text {
+    display: flex;
     margin: 0;
     justify-content: space-between;
     font-size: 1.4rem;
     font-weight: bolder;
+}
+
+.center {
+    justify-content: space-evenly;
+}
+
+.confirm-text {
+    justify-content: center;
+    margin: $smallPadding 0 $bigPadding;
+    text-shadow: $smallPadding $smallPadding $smallPadding rgba(0,0,0,0.5);
 }
 
 .card--title {

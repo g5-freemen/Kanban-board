@@ -68,7 +68,7 @@
         </form>
     </div> <!-- end of .modal-window -->
 
-    <div class="modal-window--edit">
+    <div class="modal-window--edit"> <!-- edit card -->
     <div class="modal-window--container">
         <div class='card--edit-field space-between'>Edit Card
         <button class="card-form--close-btn"></button>
@@ -100,12 +100,20 @@
             <span class="card--noUser-tooltip">* Choose user</span>
         </div>
         <div class="card--comments"></div>
-        
-
     </div> <!-- end of .modal-window--container -->
     </div> <!-- end of .modal-window--edit -->
 
-    <div class="slider">
+    <div class="modal-window--confirm"> <!-- confirm to clear 2nd column -->
+        <div class="modal-window--container">
+            <div class="confirm-text">Delete all 'In Progress' Cards?</div>
+            <div class='card--edit-field center'>
+                <button id='deleteInProgressCards'>YES</button>
+                <button id='notDeleteInProgressCards'>NO</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slider"> <!-- slider -->
         <div class="prev" onclick="plusSlides(-1)">&#10094;</div>
         <div class="next" onclick="plusSlides(1)">&#10095;</div>
 
