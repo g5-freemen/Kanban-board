@@ -246,7 +246,6 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
         document.querySelector('.slider').style.display = 'none';
-        checkWindowOverflow();
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
