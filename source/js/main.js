@@ -203,11 +203,11 @@ function checkWindowOverflow() { // if editCard window's height too big -> chang
 setInterval(() => { // refresh page on screen resize
     if ( screenWidth !== document.documentElement.clientWidth 
         || screenHeight !== document.documentElement.clientHeight 
-         && modalWindowEdit.style.visibility.value != 'undefined' 
-         && modalWindow.style.visibility.value != 'undefined'   ) {
-    console.log(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight);
-    console.log(`=${modalWindow.style.visibility.value}=`);
-    console.log(`=${modalWindowEdit.style.visibility.value}=EDIT`);
+         && modalWindowEdit.style.visibility.value == 'undefined' 
+         && modalWindow.style.visibility.value == 'undefined'   ) {
+    // console.log(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight);
+    // console.log(`=${modalWindow.style.visibility.value}=`);
+    // console.log(`=${modalWindowEdit.style.visibility.value}=EDIT`);
     alert('AHTUNG');
     screenWidth = document.documentElement.clientWidth;
     screenHeight = document.documentElement.clientHeight;
