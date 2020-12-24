@@ -1196,7 +1196,7 @@ label {
   }
 }
 
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 1080px) {
   .board {
     -webkit-box-flex: 1;
         -ms-flex: auto;
@@ -1209,9 +1209,9 @@ label {
     display: flex;
   }
   .modal-window--container {
-    -webkit-box-flex: 0.23;
-        -ms-flex: 0.23;
-            flex: 0.23;
+    -webkit-box-flex: 0.264;
+        -ms-flex: 0.264;
+            flex: 0.264;
   }
   .card-form {
     width: -webkit-fit-content;
@@ -1225,9 +1225,9 @@ label {
     width: 75%;
   }
   .modal-window--container {
-    -webkit-box-flex: 0.16;
-        -ms-flex: 0.16;
-            flex: 0.16;
+    -webkit-box-flex: 0.17;
+        -ms-flex: 0.17;
+            flex: 0.17;
   }
   .card-form {
     width: -webkit-fit-content;

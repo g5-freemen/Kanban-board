@@ -26,7 +26,7 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsArray = [],
     commentsArray = [],
     maxInProgressCards = 5,
-    mobileWidthUI = 999,
+    mobileWidthUI = 1079,
     screenWidth = document.documentElement.clientWidth,
     screenHeight = document.documentElement.clientHeight,
     slider = document.getElementById('#slider');
@@ -205,10 +205,6 @@ setInterval(() => { // refresh page on screen resize
         || screenHeight !== document.documentElement.clientHeight 
          && modalWindowEdit.style.visibility.value == 'undefined' 
          && modalWindow.style.visibility.value == 'undefined'   ) {
-    // console.log(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight);
-    // console.log(`=${modalWindow.style.visibility.value}=`);
-    // console.log(`=${modalWindowEdit.style.visibility.value}=EDIT`);
-    // alert('AHTUNG');
     screenWidth = document.documentElement.clientWidth;
     screenHeight = document.documentElement.clientHeight;
     location.reload();
