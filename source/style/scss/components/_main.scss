@@ -426,6 +426,10 @@ label {
     cursor: pointer;
 }
 
+#slider {
+    visibility: hidden;
+}
+
 .prev, .next {      /* Slider */
     @include flexible(center, center, row, wrap);
     @include noBorderCursor;

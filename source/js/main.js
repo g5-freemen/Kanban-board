@@ -28,7 +28,8 @@ let kanbanBoard = document.querySelector('.board'),
     maxInProgressCards = 5,
     mobileWidthUI = 999,
     screenWidth = document.documentElement.clientWidth,
-    screenHeight = document.documentElement.clientHeight;
+    screenHeight = document.documentElement.clientHeight,
+    slider = document.getElementById('#slider');
 
 //#region Functions
 
@@ -200,10 +201,18 @@ function checkWindowOverflow() { // if editCard window's height too big -> chang
 //#region Listeners & etc.
 
 setInterval(() => { // refresh page on screen resize
-    if ( screenWidth !== document.documentElement.clientWidth ||
-         screenHeight !== document.documentElement.clientHeight )
-    // {location.reload()}
-    alert(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight)
+    if ( screenWidth !== document.documentElement.clientWidth 
+        || screenHeight !== document.documentElement.clientHeight 
+         && modalWindowEdit.style.visibility.value != 'undefined' 
+         && modalWindow.style.visibility.value != 'undefined'   ) {
+    console.log(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight);
+    console.log(`=${modalWindow.style.visibility.value}=`);
+    console.log(`=${modalWindowEdit.style.visibility.value}=EDIT`);
+    alert('AHTUNG');
+    screenWidth = document.documentElement.clientWidth;
+    screenHeight = document.documentElement.clientHeight;
+    location.reload();
+         }
 }, 99);
 
 getUsers('https://jsonplaceholder.typicode.com/users');
@@ -418,11 +427,12 @@ modalWindowConfirm.addEventListener('click', event => {
 
 let slideIndex = 1;
 if (+document.documentElement.clientWidth <= +mobileWidthUI &&
-    modalWindowEdit.style.visibility !== 'visible' ||
-    modalWindow.style.visibility !== "visible"
-    ) {
+    modalWindowEdit.style.visibility.value != 'visible' &&
+    modalWindow.style.visibility.value != "visible"
+    ) { slider.style.visibility = 'visible';
     showSlides(slideIndex);
-}
+} else { slider.style.visibility = 'hidden' }
+console.log(slider);
 
 function plusSlides(n) {
   showSlides(slideIndex += n);

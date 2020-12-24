@@ -61,12 +61,8 @@
 }
 
 @media screen and (min-width: 1000px) {
-    .slider {
-        display: none;
-    }
-
     .board {
-        flex: 1;
+        flex: auto;
         width: auto;
     }
 
