@@ -417,7 +417,10 @@ modalWindowConfirm.addEventListener('click', event => {
 //#region Slider 
 
 let slideIndex = 1;
-if (+document.documentElement.clientWidth <= +mobileWidthUI) {
+if (+document.documentElement.clientWidth <= +mobileWidthUI &&
+    modalWindowEdit.style.visibility !== 'visible' ||
+    modalWindow.style.visibility !== "visible"
+    ) {
     showSlides(slideIndex);
 }
 
