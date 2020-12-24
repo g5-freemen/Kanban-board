@@ -202,7 +202,8 @@ function checkWindowOverflow() { // if editCard window's height too big -> chang
 setInterval(() => { // refresh page on screen resize
     if ( screenWidth !== document.documentElement.clientWidth ||
          screenHeight !== document.documentElement.clientHeight )
-    {location.reload()}
+    // {location.reload()}
+    alert(screenWidth+'x'+screenHeight+'\n'+document.documentElement.clientWidth+'x'+document.documentElement.clientHeight)
 }, 99);
 
 getUsers('https://jsonplaceholder.typicode.com/users');
@@ -246,6 +247,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
         document.querySelector('.slider').style.display = 'none';
+        checkWindowOverflow();
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
