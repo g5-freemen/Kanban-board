@@ -251,7 +251,10 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         let user = card.querySelector('.card--user').innerHTML;
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
-        document.querySelector('.slider').style.display = 'none';
+        // if (document.getElementById('#slider')) {
+        //     alert('SLIDER NOT HIDDEN');
+        //     document.getElementById('#slider').style.visibility = 'hidden';
+        // }
         checkWindowOverflow();
     };
 
