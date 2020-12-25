@@ -80,8 +80,9 @@
 }
 
 @media screen and (min-width: 1079px) and (max-width: 1081px) {
-    .modal-window--container {
-        flex: 0.9;
+    .card-form {
+        width: fit-content;
+        transform: scale(0.9);
     }
 }
 
