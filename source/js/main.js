@@ -33,14 +33,16 @@ let kanbanBoard = document.querySelector('.board'),
 
 //#region Functions
 
-function checkWidthOverflow(place) { // check width overflow
+function checkWidthOverflow(place) { // check window width overflow
     let item = document.querySelector(place);
     console.log(item.clientWidth);
-    console.log('screen=',document.documentElement.clientWidth * 0.97);
-    while (document.documentElement.clientWidth * 0.97 < item.clientWidth) {
-        item.clientWidth--;
-        console.log(item.clientWidth);
+    console.log('screen=',document.documentElement.clientWidth);
+    let windowWidth = item.clientWidth;
+    while (document.documentElement.clientWidth * 0.98 < windowWidth) {
+        windowWidth-=2;
+        console.log(windowWidth);
     }
+    item.style.width = windowWidth + 'px';
 } // end of checkWidthOverflow()
 
 function calcBoardHeight() { //calculate and set height of board (depends of content)
