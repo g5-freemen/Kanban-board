@@ -33,6 +33,16 @@ let kanbanBoard = document.querySelector('.board'),
 
 //#region Functions
 
+function checkWidthOverflow(place) { // check width overflow
+    let item = document.querySelector(place);
+    console.log(item.clientWidth);
+    console.log('screen=',document.documentElement.clientWidth * 0.97);
+    while (document.documentElement.clientWidth * 0.97 < item.clientWidth) {
+        item.clientWidth--;
+        console.log(item.clientWidth);
+    }
+} // end of checkWidthOverflow()
+
 function calcBoardHeight() { //calculate and set height of board (depends of content)
     let kanbanBoardHeight = document.documentElement.clientHeight,
         kanbanBoardTitleHeight = document.querySelector('.header__title').clientHeight,
@@ -192,7 +202,7 @@ function loadCommentsFromArray(id) { // add comments from array to editCard
 }
 
 function checkWindowOverflow() { // if editCard window's height too big -> change window position
-    if (modalWindowEditContainer.clientHeight > 0.9 * document.documentElement.clientHeight) {
+    if (modalWindowEditContainer.clientHeight > 0.75 * document.documentElement.clientHeight) {
         modalWindowEdit.style.alignItems = 'flex-start';
     } else {modalWindowEdit.style.alignItems = 'center';}
 }
@@ -310,6 +320,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
 
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
     modalWindow.style.visibility = "visible";
+    checkWidthOverflow('.card-form');
 } );
 
 modalWindow.addEventListener('submit', event => {   // form submit Btn create new card & close window
@@ -341,6 +352,8 @@ modalWindowEdit.addEventListener('click', event => {
     let editDesc = 'card--edit-img edit-desc',
         editTitle = 'card--edit-img edit-title',
         columnID = document.querySelector('.card--edit-title').id;
+
+        checkWidthOverflow('.modal-window--container');
 
     function updateCard(column,array,thing) {
         if (columnID==column) {
