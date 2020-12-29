@@ -35,12 +35,9 @@ let kanbanBoard = document.querySelector('.board'),
 
 function checkWidthOverflow(place) { // check window width overflow
     let item = document.querySelector(place);
-    console.log(item.clientWidth);
-    console.log('screen=',document.documentElement.clientWidth);
     let windowWidth = item.clientWidth;
     while (document.documentElement.clientWidth * 0.98 < windowWidth) {
         windowWidth-=2;
-        console.log(windowWidth);
     }
     item.style.width = windowWidth + 'px';
 } // end of checkWidthOverflow()
@@ -237,8 +234,8 @@ function setUserNamePosition(column) { // set left margin of every userName in e
 
 kanbanBoard.addEventListener('mouseover', event => { // show tooltip if mouseover X button
     if(event.target.className === 'board--delBtn' ) {
-    DelBtnTooltip.style.left = event.clientX-50 +'px';
-    DelBtnTooltip.style.top = event.clientY+10 +'px';
+    DelBtnTooltip.style.left = event.clientX - DelBtnTooltip.clientWidth +'px';
+    DelBtnTooltip.style.top = event.clientY +'px';
     DelBtnTooltip.style.visibility = 'visible';
     }
 } );
