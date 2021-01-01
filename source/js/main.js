@@ -483,19 +483,20 @@ function showSlides(n) {
 let x0 = null;
 
 function handleTouchStart(evt) {
-    x0 = evt.clientX;
+    x0 = +evt.touches[0].clientX.toFixed();
 }
+
 function handleTouchEnd(evt) {
-    if ( x0 || x0 === 0 ) {
-        if (evt.clientX > x0) { plusSlides(1) } 
-        else { plusSlides(-1) }
-        
-        x0 = null;
+    let x1 = +evt.touches[0].clientX.toFixed(),
+        xDiff = Math.abs(x0 - x1);
+    if ( (x0 || x0 === 0) && xDiff > +kanbanBoard.clientWidth * 0.07 ) {
+        if (x1 > x0) { plusSlides(-1) } 
+        else { plusSlides(1) }
+    x0 = null;
     }
 }
 
 document.addEventListener('touchstart', handleTouchStart, false );
-
-document.addEventListener('touchend', handleTouchEnd, false );
+document.addEventListener('touchmove', handleTouchEnd, false );
 
 //#endregion
