@@ -426,23 +426,19 @@ label {
     cursor: pointer;
 }
 
-#slider {
-    visibility: hidden;
-}
-
 .prev, .next {      /* Slider */
     @include flexible(center, center, row, wrap);
     @include noBorderCursor;
     position: absolute;
     top: 50%;
-    width: 0.8rem;
-    height: 2rem;
-    margin-top: -1rem;
+    width: $smallBtnSize;
+    height: 2*$smallBtnSize;
+    margin-top: -$smallBtnSize;
     padding: $smallPadding;
     background-color: grey;
     color: $whiteBGColor;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: $normalBtnSize;
     transition: 0.6s ease;
     border-radius: 0 $borderRadiusSmall $borderRadiusSmall 0;
     user-select: none;

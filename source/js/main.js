@@ -26,10 +26,10 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsArray = [],
     commentsArray = [],
     maxInProgressCards = 5,
-    mobileWidthUI = 1079,
     screenWidth = document.documentElement.clientWidth,
     screenHeight = document.documentElement.clientHeight,
-    slider = document.getElementById('#slider');
+    slider = document.getElementById('#slider'),
+    slides = document.querySelectorAll('div[class^="board"][class$="container"]');
 
 //#region Functions
 
@@ -166,6 +166,7 @@ function clearColumn(array, cardsHTML, cardsLS) { // clear column
 
 function showEditCard(id,title,desc,date, column, user) { // show modal window to edit card
     modalWindowEdit.style.visibility = 'visible';
+    slider.style.display = 'none' ;
     modalWindowEdit.querySelector('.card--edit-title').value = title;
     modalWindowEdit.querySelector('.card--edit-title').id = column;
     modalWindowEdit.querySelector('.card--edit-desc').innerHTML = desc;
@@ -181,6 +182,7 @@ function showEditCard(id,title,desc,date, column, user) { // show modal window t
         document.querySelector('.card--edit-img.edit-title').style.display = 'flex';
         document.querySelector('.card--edit-img.edit-desc').style.display = 'flex';
     }
+    fadeWindow(modalWindowEditContainer, 0, 1, 6);
 };
 
 let getUsers = (url) => fetch(`${url}`)     // load users list from URL
@@ -201,9 +203,27 @@ function loadCommentsFromArray(id) { // add comments from array to editCard
 }
 
 function checkWindowOverflow() { // if editCard window's height too big -> change window position
-    if (modalWindowEditContainer.clientHeight > 0.75 * document.documentElement.clientHeight) {
+    if (modalWindowEditContainer.clientHeight > 0.8 * document.documentElement.clientHeight) {
         modalWindowEdit.style.alignItems = 'flex-start';
     } else {modalWindowEdit.style.alignItems = 'center';}
+}
+
+function fadeWindow(place, beginOpacity, endOpacity, ms) {
+    let currentOpacity = +beginOpacity;
+    place.style.opacity = +beginOpacity; 
+    
+    let intervalID = setInterval( function() {show(place, beginOpacity, endOpacity)}, ms);
+
+    function show(place, beginOpacity, endOpacity) { 
+        currentOpacity = +document.defaultView.getComputedStyle(place).getPropertyValue("opacity"); 
+        if ( currentOpacity.toFixed(3) != +endOpacity.toFixed(3) ) { 
+            if ( beginOpacity < endOpacity ) { currentOpacity += 0.005; }
+            else { currentOpacity -= 0.005 }
+            place.style.opacity = currentOpacity;
+        } 
+        else { clearInterval(intervalID) } 
+    } 
+    
 }
 
 //#endregion
@@ -260,10 +280,6 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         let user = card.querySelector('.card--user').innerHTML;
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
-        // if (document.getElementById('#slider')) {
-        //     alert('SLIDER NOT HIDDEN');
-        //     document.getElementById('#slider').style.visibility = 'hidden';
-        // }
         checkWindowOverflow();
     };
 
@@ -319,6 +335,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
 
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
     modalWindow.style.visibility = "visible";
+    slider.style.display = 'none' ;
     checkWidthOverflow('.card-form');
 } );
 
@@ -436,44 +453,55 @@ modalWindowConfirm.addEventListener('click', event => {
 //#endregion
 //#region Slider 
 
-let slideIndex = 1;
-if (+document.documentElement.clientWidth <= +mobileWidthUI &&
-    modalWindowEdit.style.visibility.value != 'visible' &&
-    modalWindow.style.visibility.value != 'visible'
-    ) { 
-    showSlides(slideIndex);
-} else { slider.style.visibility = 'hidden' }
+let slideIndex = +sessionStorage['currentSlide'] || 1; // load last slide number from sessionStorage
 
-function plusSlides(n) {
+if ( document.defaultView.getComputedStyle(toDoBoard).getPropertyValue("display") == "none" ||
+    document.defaultView.getComputedStyle(inProgressBoard).getPropertyValue("display") == "none" ||
+    document.defaultView.getComputedStyle(doneBoard).getPropertyValue("display") == "none"
+) { showSlides(slideIndex) 
+} else { slider.style.display = 'none'}
+
+function plusSlides(n) { // change slide number
   showSlides(slideIndex += n);
+  sessionStorage.setItem('currentSlide', slideIndex); // save current slide number to sessionStorage
 }
 
 function currentSlide(n) {
   showSlides(slideIndex = n);
+  sessionStorage.setItem('currentSlide', slideIndex);  // save current slide number to sessionStorage
 }
 
 function showSlides(n) {
-    slider.style.visibility = 'visible';
-    let i;
     let dots = document.getElementsByClassName("dot");
     if (n > 3) {slideIndex = 1}; // if try to slide right from slide 3 it returns 1st slide
     if (n < 1) {slideIndex = 3}; // if try to slide left from slide 1 it returns 3rd slide
 
-    toDoBoard.style.display = "none";
-    inProgressBoard.style.display = "none";
-    doneBoard.style.display = "none";
-
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", ""); //make all slider dots non active
+    for (let i = 0; i < 3; i++) {
+        if (i === slideIndex-1) { 
+            slides[i].style.display = 'flex';
+            dots[i].className += " active"; // make slider dot number n -> active
+        } else { 
+            slides[i].style.display = 'none';
+            dots[i].className = dots[i].className.replace(" active", "");  // make slider dot number n -> non-active
+        } 
     }
-    if (slideIndex === 1) toDoBoard.style.display = "flex";
-    if (slideIndex === 2) inProgressBoard.style.display = "flex";
-    if (slideIndex === 3) doneBoard.style.display = "flex";
+    setUserNamePosition( slides[slideIndex-1] );
     calcBoardHeight();
-    setUserNamePosition(toDoCards);
-    setUserNamePosition(inProgressCards);
-    setUserNamePosition(doneCards);
-
-    dots[slideIndex-1].className += " active"; //make slider dot number n -> active
 }
+
+// Slider Swipe
+
+let x0 = null;
+
+document.addEventListener('touchstart', (event) => { x0 = event.clientX } );
+
+document.addEventListener('touchend', (event) => {
+    if ( x0 || x0 === 0 ) {
+        if (event.clientX > x0) { plusSlides(1) } 
+        else { plusSlides(-1) }
+        
+        x0 = null;
+    }
+} );
+
 //#endregion
