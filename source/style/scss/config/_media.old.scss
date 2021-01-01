@@ -1,31 +1,31 @@
-// @media screen and (max-width: 412px) {
-//     .modal-window--container {
-//         transform: scale(0.93);
-//     }
+@media screen and (max-width: 412px) {
+    .modal-window--container {
+        transform: scale(0.93);
+    }
 
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.93);
-//     }
-// }
+    .card-form {
+        width: fit-content;
+        transform: scale(0.93);
+    }
+}
 
-// @media screen and (max-width: 321px) {
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.83);
-//     }
-// }
+@media screen and (max-width: 321px) {
+    .card-form {
+        width: fit-content;
+        transform: scale(0.83);
+    }
+}
 
-// @media screen and (max-width: 281px) {
-//     .modal-window--container {
-//         transform: scale(0.81);
-//     }
+@media screen and (max-width: 281px) {
+    .modal-window--container {
+        transform: scale(0.81);
+    }
 
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.7);
-//     }
-// }
+    .card-form {
+        width: fit-content;
+        transform: scale(0.7);
+    }
+}
 
 @media screen and (min-width: 541px) {
 
@@ -74,6 +74,9 @@
         flex: 0.264;
     }
 
+    .card-form {
+        width: fit-content;
+    }
 }
 
 @media screen and (min-width: 1079px) and (max-width: 1081px) {
@@ -90,6 +93,10 @@
 
     .modal-window--container {
         flex: 0.17;
+    }
+
+    .card-form {
+        width: fit-content;
     }
 
 }

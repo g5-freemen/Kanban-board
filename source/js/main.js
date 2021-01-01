@@ -26,8 +26,6 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsArray = [],
     commentsArray = [],
     maxInProgressCards = 5,
-    screenWidth = document.documentElement.clientWidth,
-    screenHeight = document.documentElement.clientHeight,
     slider = document.getElementById('#slider'),
     slides = document.querySelectorAll('div[class^="board"][class$="container"]');
 
@@ -36,7 +34,7 @@ let kanbanBoard = document.querySelector('.board'),
 function checkWidthOverflow(place) { // check window width overflow
     let item = document.querySelector(place);
     let windowWidth = item.clientWidth;
-    while (document.documentElement.clientWidth * 0.98 < windowWidth) {
+    while (document.documentElement.clientWidth < windowWidth) {
         windowWidth-=2;
     }
     item.style.width = windowWidth + 'px';
@@ -151,6 +149,7 @@ function showCardsCounter() { // show all counters of cards
     showCardCounter(doneCardsArray, doneCardsCounter, doneCardsDelBtn);
 };
 
+
 function closeModalWindow() {
     let formNewCard = document.querySelector('.card-form');
     formNewCard.reset();
@@ -182,7 +181,7 @@ function showEditCard(id,title,desc,date, column, user) { // show modal window t
         document.querySelector('.card--edit-img.edit-title').style.display = 'flex';
         document.querySelector('.card--edit-img.edit-desc').style.display = 'flex';
     }
-    fadeWindow(modalWindowEditContainer, 0, 1, 6);
+    fadeWindow(modalWindowEditContainer, 0, 1, 1);
 };
 
 let getUsers = (url) => fetch(`${url}`)     // load users list from URL
@@ -216,33 +215,23 @@ function fadeWindow(place, beginOpacity, endOpacity, ms) {
 
     function show(place, beginOpacity, endOpacity) { 
         currentOpacity = +document.defaultView.getComputedStyle(place).getPropertyValue("opacity"); 
-        if ( currentOpacity.toFixed(3) != +endOpacity.toFixed(3) ) { 
-            if ( beginOpacity < endOpacity ) { currentOpacity += 0.005; }
-            else { currentOpacity -= 0.005 }
+        if ( currentOpacity.toFixed(2) != +endOpacity.toFixed(2) ) { 
+            if ( beginOpacity < endOpacity ) { currentOpacity += 0.01; }
+            else { currentOpacity -= 0.01 }
             place.style.opacity = currentOpacity;
         } 
         else { clearInterval(intervalID) } 
     } 
-    
 }
 
 //#endregion
 //#region Listeners & etc.
 
-setInterval(() => { // refresh page on screen resize
-    if ( screenWidth !== document.documentElement.clientWidth 
-        || screenHeight !== document.documentElement.clientHeight 
-         && modalWindowEdit.style.visibility.value == 'undefined' 
-         && modalWindow.style.visibility.value == 'undefined'   ) {
-    screenWidth = document.documentElement.clientWidth;
-    screenHeight = document.documentElement.clientHeight;
-    location.reload();
-         }
-}, 99);
-
 getUsers('https://jsonplaceholder.typicode.com/users');
 refreshBoard();
 loadComments();
+
+window.addEventListener('resize', () => { location.reload() });
 
 function setUserNamePosition(column) { // set left margin of every userName in every card
     let cardsInColumn = column.getElementsByClassName('card--user'),
@@ -339,11 +328,11 @@ createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls mo
     checkWidthOverflow('.card-form');
 } );
 
-modalWindow.addEventListener('submit', event => {   // form submit Btn create new card & close window
+modalWindow.addEventListener('submit', event => {   // form submit Btn (create new card & close window)
     let formNewCard = document.querySelector('.card-form');
     event.preventDefault();
     let date = new Date();
-    let dateTime = date.getDate() +"/"+ date.getMonth() +"/"+ date.getFullYear();
+    let dateTime = date.getDate() +"/"+ (+date.getMonth()+1) +"/"+ date.getFullYear();
     if (+date.getMinutes() < 10 ) {dateTime += " - "+ date.getHours() +':0'+date.getMinutes()}
     else {dateTime += " - "+ date.getHours() +':'+date.getMinutes()};
     let cardTitle = formNewCard.querySelector('.card-form--title').value;
@@ -493,7 +482,7 @@ function showSlides(n) {
 
 let x0 = null;
 
-document.addEventListener('touchstart', (event) => { x0 = event.clientX } );
+document.addEventListener('touchstart', (event) => { x0 = event.clientX }, false );
 
 document.addEventListener('touchend', (event) => {
     if ( x0 || x0 === 0 ) {
@@ -502,6 +491,6 @@ document.addEventListener('touchend', (event) => {
         
         x0 = null;
     }
-} );
+}, false );
 
 //#endregion
