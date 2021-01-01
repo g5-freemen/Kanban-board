@@ -482,12 +482,12 @@ function showSlides(n) {
 
 let x0 = null;
 
-kanbanBoard.addEventListener('touchstart', (event) => { alert(event.clientX); x0 = +event.clientX }, false );
+kanbanBoard.addEventListener('touchstart', () => { alert(Touch.clientX); x0 = +Touch.clientX }, false );
 
-kanbanBoard.addEventListener('touchend', (event) => {
-    alert(event.clientX); 
+kanbanBoard.addEventListener('touchend', () => {
+    alert(Touch.clientX); 
     if ( x0 || x0 === 0 ) {
-        if (+event.clientX > x0) { plusSlides(1) } 
+        if (+Touch.clientX > x0) { plusSlides(1) } 
         else { plusSlides(-1) }
         
         x0 = null;
