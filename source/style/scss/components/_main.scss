@@ -126,6 +126,7 @@
 
 .modal-window, .modal-window--confirm {
     align-items: center;
+    overflow-y: auto;
 }
 
 .board__cards {
@@ -355,7 +356,7 @@
 .card-form {
     display: flex;
     flex-direction: column;
-    width: 80vmin;
+    // width: fit-content;
     padding: $bigPadding;
     background: $whiteBGColor;
     border-radius: $borderRadiusBig;

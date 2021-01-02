@@ -1,40 +1,18 @@
-// @media screen and (max-width: 412px) {
-//     .modal-window--container {
-//         transform: scale(0.93);
-//     }
+@media screen and (max-width: 281px) {
+    .card-form {
+        transform: scale(0.85);
+    }
 
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.93);
-//     }
-// }
+}
 
-// @media screen and (max-width: 321px) {
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.83);
-//     }
-// }
-
-// @media screen and (max-width: 281px) {
-//     .modal-window--container {
-//         transform: scale(0.81);
-//     }
-
-//     .card-form {
-//         width: fit-content;
-//         transform: scale(0.7);
-//     }
-// }
-
-@media screen and (min-width: 541px) {
+@media screen and (min-width: 539px) {
 
     .board__to-do--container, .board__in-progress--container {
         margin-right: $bigPadding;
     }
 
     .modal-window--container {
-        flex: 0.4;
+        flex: 0.62;
     }
 
     .card--edit-img {
@@ -50,7 +28,7 @@
     }
 }
 
-@media screen and (min-width: 760px) {
+@media screen and (min-width: 720px) {
     .board {
         width: 66%;
     }
@@ -73,14 +51,6 @@
     .modal-window--container {
         flex: 0.264;
     }
-
-}
-
-@media screen and (min-width: 1079px) and (max-width: 1081px) {
-    .card-form {
-        width: fit-content;
-        transform: scale(0.9);
-    }
 }
 
 @media screen and (min-width: 1600px) {
@@ -91,7 +61,6 @@
     .modal-window--container {
         flex: 0.17;
     }
-
 }
 
 @media screen and (min-width: 2000px) {

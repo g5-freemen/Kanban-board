@@ -21,6 +21,7 @@ let kanbanBoard = document.querySelector('.board'),
     doneCardsDelBtn = doneBoard.querySelector('.board--delBtn'),
     DelBtnTooltip = toDoBoard.querySelector('.board--delBtn-tooltip'),
     postCommentBtn = document.querySelector('.card--post-comment'),
+    formNewCard = document.querySelector('.card-form'),
     toDoCardsArray = [],
     inProgressCardsArray = [],
     doneCardsArray = [],
@@ -32,11 +33,14 @@ let kanbanBoard = document.querySelector('.board'),
 //#region Functions
 
 function checkWidthOverflow(place) { // check window width overflow
-    let item = document.querySelector(place);
-    let windowWidth = item.clientWidth;
-    while (document.documentElement.clientWidth < windowWidth) {
+    let item = document.querySelector(place),
+        windowWidth = item.clientWidth,
+        scaleSize = +document.defaultView.getComputedStyle(item).getPropertyValue("zoom");
+    while (document.documentElement.clientWidth * 0.98 < windowWidth) {
         windowWidth-=2;
+        scaleSize-=0.006;
     }
+    item.style.zoom = scaleSize;
     item.style.width = windowWidth + 'px';
 } // end of checkWidthOverflow()
 
@@ -60,7 +64,7 @@ function calcBoardHeight() { //calculate and set height of board (depends of con
     } else {
         kanbanBoard.style.height = boardHeightPx + 'px';
     };
-}
+};
 
 function loadCards(cardsName, toPlace, number) { // Load cards from localStorage
     if (localStorage[cardsName]) {
@@ -151,7 +155,6 @@ function showCardsCounter() { // show all counters of cards
 
 
 function closeModalWindow() {
-    let formNewCard = document.querySelector('.card-form');
     formNewCard.reset();
     location.reload();
 };
@@ -188,7 +191,7 @@ let getUsers = (url) => fetch(`${url}`)     // load users list from URL
 .then(response => response.json())
 .then(result => {
     for(let item of result) {
-        usersList.append( createCardElement('option', item.name, '', item.name )); // <option> innerHTML & value = name
+        usersList.append( createCardElement('option', item.name, '', item.name ));
     }
 } );
 
@@ -202,9 +205,12 @@ function loadCommentsFromArray(id) { // add comments from array to editCard
 }
 
 function checkWindowOverflow() { // if editCard window's height too big -> change window position
-    if (modalWindowEditContainer.clientHeight > 0.8 * document.documentElement.clientHeight) {
-        modalWindowEdit.style.alignItems = 'flex-start';
-    } else {modalWindowEdit.style.alignItems = 'center';}
+    if (modalWindowEditContainer.clientHeight > 0.5 * document.documentElement.clientHeight) {
+        modalWindowEdit.style.alignItems = 'flex-start'
+    } else {modalWindowEdit.style.alignItems = 'center'}
+    if (formNewCard.clientHeight > 0.5 * document.documentElement.clientHeight) {
+        modalWindow.style.alignItems = 'flex-start'
+    } else {modalWindow.style.alignItems = 'center'}
 }
 
 function fadeWindow(place, beginOpacity, endOpacity, ms) {
@@ -222,16 +228,7 @@ function fadeWindow(place, beginOpacity, endOpacity, ms) {
         } 
         else { clearInterval(intervalID) } 
     } 
-}
-
-//#endregion
-//#region Listeners & etc.
-
-getUsers('https://jsonplaceholder.typicode.com/users');
-refreshBoard();
-loadComments();
-
-window.addEventListener('resize', () => { location.reload() });
+};
 
 function setUserNamePosition(column) { // set left margin of every userName in every card
     let cardsInColumn = column.getElementsByClassName('card--user'),
@@ -240,6 +237,20 @@ function setUserNamePosition(column) { // set left margin of every userName in e
         element.style.marginLeft = (columnWidth.clientWidth - element.clientWidth)-10 + 'px';
     }
 };
+
+//#endregion
+//#region Listeners & etc.
+
+getUsers('https://jsonplaceholder.typicode.com/users');
+refreshBoard();
+loadComments();
+
+window.addEventListener('resize', () => {   // refresh board on resize
+    if ( document.defaultView.getComputedStyle(modalWindowEditContainer).getPropertyValue("visibility") == 'hidden'
+    && document.defaultView.getComputedStyle(formNewCard).getPropertyValue("visibility") == 'hidden' ) {
+        location.reload();
+    }
+} );
 
 kanbanBoard.addEventListener('mouseover', event => { // show tooltip if mouseover X button
     if(event.target.className === 'board--delBtn' ) {
@@ -270,6 +281,7 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
         showEditCard(cardID, cardTitle, cardDesc, cardDate, column, user);
         loadCommentsFromArray(cardID);
         checkWindowOverflow();
+        checkWidthOverflow('.modal-window--container');
     };
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
@@ -326,10 +338,11 @@ createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls mo
     modalWindow.style.visibility = "visible";
     slider.style.display = 'none' ;
     checkWidthOverflow('.card-form');
+    checkWindowOverflow();
+    fadeWindow(formNewCard, 0, 1, 1);
 } );
 
 modalWindow.addEventListener('submit', event => {   // form submit Btn (create new card & close window)
-    let formNewCard = document.querySelector('.card-form');
     event.preventDefault();
     let date = new Date();
     let dateTime = date.getDate() +"/"+ (+date.getMonth()+1) +"/"+ date.getFullYear();
@@ -357,8 +370,6 @@ modalWindowEdit.addEventListener('click', event => {
     let editDesc = 'card--edit-img edit-desc',
         editTitle = 'card--edit-img edit-title',
         columnID = document.querySelector('.card--edit-title').id;
-
-        checkWidthOverflow('.modal-window--container');
 
     function updateCard(column,array,thing) {
         if (columnID==column) {
@@ -468,10 +479,10 @@ function showSlides(n) {
     for (let i = 0; i < 3; i++) {
         if (i === slideIndex-1) { 
             slides[i].style.display = 'flex';
-            dots[i].className += " active"; // make slider dot number n -> active
+            dots[i].className += " active"; // make slider dot -> active
         } else { 
             slides[i].style.display = 'none';
-            dots[i].className = dots[i].className.replace(" active", "");  // make slider dot number n -> non-active
+            dots[i].className = dots[i].className.replace(" active", "");  // make slider dot -> non-active
         } 
     }
     setUserNamePosition( slides[slideIndex-1] );
@@ -489,14 +500,14 @@ function handleTouchStart(evt) {
 function handleTouchEnd(evt) {
     let x1 = +evt.touches[0].clientX.toFixed(),
         xDiff = Math.abs(x0 - x1);
-    if ( (x0 || x0 === 0) && xDiff > +kanbanBoard.clientWidth * 0.07 ) {
+    if ( (x0 || x0 === 0) && xDiff > +kanbanBoard.clientWidth * 0.05 ) {
         if (x1 > x0) { plusSlides(-1) } 
         else { plusSlides(1) }
     x0 = null;
     }
 }
 
-document.addEventListener('touchstart', handleTouchStart, false );
-document.addEventListener('touchmove', handleTouchEnd, false );
+document.addEventListener('touchstart', handleTouchStart );
+document.addEventListener('touchmove', handleTouchEnd );
 
 //#endregion
