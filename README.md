@@ -9,7 +9,7 @@ https://g5-freemen.github.io/Kanban-board/
 * Deletion of all cards in the column
 * Moving cards to another columns
 * Card counter
-* Column slider on mobile devices
+* Column slider (buttons & swipe) on mobile devices
 * Saving cards to local storage and printing them on page load
 * Card editing
 * Comments
