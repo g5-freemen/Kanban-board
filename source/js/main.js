@@ -1,34 +1,23 @@
 'use strict';
 
-let kanbanBoard = document.querySelector('.board'),
-    toDoBoard = document.querySelector('.board__to-do--container'),
-    toDoCards = toDoBoard.querySelector('.board__cards'),
-    inProgressBoard = document.querySelector('.board__in-progress--container'),
-    inProgressCards = inProgressBoard.querySelector('.board__cards'),
-    doneBoard = document.querySelector('.board__done--container'),
-    doneCards = doneBoard.querySelector('.board__cards'),
+let slider = document.getElementById('#slider'),
+    slides = document.querySelectorAll('div[class^="board"][class$="container"]'),
+    slidesCounters = document.querySelectorAll('.board--card_counter'),
+    slidesCards = document.querySelectorAll('.board__cards'),
+    delBtnInCard = document.querySelectorAll('.board--delBtn'),
+    kanbanBoard = document.querySelector('.board'),
     createCardBtn = document.querySelector('.board__add-card-btn'),
     modalWindow = document.querySelector('.modal-window'),
     closeModalWindowBtn = document.querySelector('.card-form--close-btn'),
     modalWindowEdit = document.querySelector('.modal-window--edit'),
     modalWindowEditContainer = modalWindowEdit.querySelector('.modal-window--container'),
     modalWindowConfirm = document.querySelector('.modal-window--confirm'),
-    toDoCardsCounter = toDoBoard.querySelector('.board--card_counter'),
-    inProgressCardsCounter = inProgressBoard.querySelector('.board--card_counter'),
-    doneCardsCounter = doneBoard.querySelector('.board--card_counter'),
-    toDoCardsDelBtn = toDoBoard.querySelector('.board--delBtn'),
-    inProgressCardsDelBtn = inProgressBoard.querySelector('.board--delBtn'),
-    doneCardsDelBtn = doneBoard.querySelector('.board--delBtn'),
-    DelBtnTooltip = toDoBoard.querySelector('.board--delBtn-tooltip'),
+    DelBtnTooltip = document.querySelector('.board--delBtn-tooltip'),
     postCommentBtn = document.querySelector('.card--post-comment'),
     formNewCard = document.querySelector('.card-form'),
-    toDoCardsArray = [],
-    inProgressCardsArray = [],
-    doneCardsArray = [],
+    cardsArray = [ [], [], [] ],
     commentsArray = [],
-    maxInProgressCards = 5,
-    slider = document.getElementById('#slider'),
-    slides = document.querySelectorAll('div[class^="board"][class$="container"]');
+    maxInProgressCards = 5;
 
 //#region Functions
 
@@ -48,16 +37,8 @@ function calcBoardHeight() { //calculate and set height of board (depends of con
     let kanbanBoardHeight = document.documentElement.clientHeight,
         kanbanBoardTitleHeight = document.querySelector('.header__title').clientHeight,
         kanbanBoardSubtitleHeight = document.querySelector('.header__subtitle').clientHeight,
-        toDoHeight = toDoBoard.clientHeight,
-        inProgressHeight = inProgressBoard.clientHeight,
-        doneHeight = doneBoard.clientHeight,
-        maxColumnHeight;
-
-    if (toDoHeight >= inProgressHeight && toDoHeight >= doneHeight ) maxColumnHeight = toDoHeight;
-    if (inProgressHeight >= toDoHeight && inProgressHeight >= doneHeight ) maxColumnHeight = inProgressHeight;
-    if (doneHeight >= inProgressHeight && doneHeight >= toDoHeight ) maxColumnHeight = doneHeight;
-
-    let boardHeightPx = kanbanBoardHeight*0.88 - (kanbanBoardTitleHeight + kanbanBoardSubtitleHeight) ;
+        maxColumnHeight = Math.max(slides[0].clientHeight, slides[1].clientHeight, slides[2].clientHeight),
+        boardHeightPx = kanbanBoardHeight*0.88 - (kanbanBoardTitleHeight + kanbanBoardSubtitleHeight) ;
 
     if ( boardHeightPx < maxColumnHeight ) {
         kanbanBoard.style.height = maxColumnHeight + 'px';
@@ -84,15 +65,12 @@ function loadComments() { // Load comments from localStorage
 }
 
 function refreshBoard() {
-    clearColumn(toDoCardsArray, toDoCards, '');
-    clearColumn(inProgressCardsArray, inProgressCards, '');
-    clearColumn(doneCardsArray, doneCards, '');
-    loadCards('toDoCards', toDoCards, 1);
-    loadCards('inProgressCards', inProgressCards, 2);
-    loadCards('doneCards', doneCards, 3);
-    setUserNamePosition(doneCards);
-    setUserNamePosition(toDoCards);
-    setUserNamePosition(inProgressCards);
+    for (let i = 0 ; i < 3 ; i++ )
+        {
+            clearColumn(cardsArray[i], slidesCards[i], '');
+            loadCards(`cardsArray[${i}]`, slidesCards[i], i+1);
+            setUserNamePosition(slidesCards[i]);
+        }
 };
 
 function createCard(date, title, desc, idCard, user, number) {
@@ -108,9 +86,7 @@ function createCard(date, title, desc, idCard, user, number) {
     bottomBlock.append(createCardElement('button', '', 'delete-btn'));
     bottomBlock.append(createCardElement('button', '', 'move-btn'));
     card.append(bottomBlock);
-    if (number===1) toDoCardsArray.push( {title, desc, date, id:(+card.id), user} );
-    if (number===2) inProgressCardsArray.push( {title, desc, date, id:(+card.id), user} );
-    if (number===3) doneCardsArray.push( {title, desc, date, id:(+card.id), user} );
+    cardsArray[number-1].push( {title, desc, date, id:(+card.id), user} );
     showCardsCounter();
     return card;
 };
@@ -123,7 +99,7 @@ function createCardElement(tag, text, name, value) {
     return element;
 };
 
-function deleteCard(cardClassName, nameInLS, array, moveTo) { //delete or move (if 4 value)
+function deleteCard(cardClassName, nameInLS, array, moveTo) { // delete or move (if 4th value = true)
     let card = event.target.closest(cardClassName);
     for (let i = 0; i < array.length; i++) {
         if (array[i].id === +card.id) {
@@ -148,11 +124,10 @@ function showCardCounter(array, counter, delBtn) { //show single column cards co
 };
 
 function showCardsCounter() { // show all counters of cards
-    showCardCounter(toDoCardsArray, toDoCardsCounter, toDoCardsDelBtn);
-    showCardCounter(inProgressCardsArray, inProgressCardsCounter, inProgressCardsDelBtn);
-    showCardCounter(doneCardsArray, doneCardsCounter, doneCardsDelBtn);
+    for (let i = 0; i < 3; i++) {
+        showCardCounter(cardsArray[i], slidesCounters[i], delBtnInCard[i]);
+    }
 };
-
 
 function closeModalWindow() {
     formNewCard.reset();
@@ -175,7 +150,7 @@ function showEditCard(id,title,desc,date, column, user) { // show modal window t
     modalWindowEdit.querySelector('.card--edit-date').innerHTML = date;
     modalWindowEdit.querySelector('.card--edit-date').id = id;
     modalWindowEdit.querySelector('.card--edit-user').innerHTML = user;
-    if (column == 'inProgressCards' || column == 'doneCards') { // no add comments btn in this columns
+    if (column == 'cardsArray[1]' || column == 'cardsArray[2]') { // no add comments btn in this columns
         document.querySelector('.card__add-comment--button').style.display = 'none';
         document.querySelector('.card--edit-img.edit-title').style.display = 'none';
         document.querySelector('.card--edit-img.edit-desc').style.display = 'none';
@@ -205,10 +180,10 @@ function loadCommentsFromArray(id) { // add comments from array to editCard
 }
 
 function checkWindowOverflow() { // if editCard window's height too big -> change window position
-    if (modalWindowEditContainer.clientHeight > 0.5 * document.documentElement.clientHeight) {
+    if (modalWindowEditContainer.clientHeight > 0.55 * document.documentElement.clientHeight) {
         modalWindowEdit.style.alignItems = 'flex-start'
     } else {modalWindowEdit.style.alignItems = 'center'}
-    if (formNewCard.clientHeight > 0.5 * document.documentElement.clientHeight) {
+    if (formNewCard.clientHeight > 0.55 * document.documentElement.clientHeight) {
         modalWindow.style.alignItems = 'flex-start'
     } else {modalWindow.style.alignItems = 'center'}
 }
@@ -267,13 +242,13 @@ kanbanBoard.addEventListener('mouseout', () => { // hide tooltip if mouseout of 
 kanbanBoard.addEventListener('click', event => {    // clicks inside of board
     if( event.target.className === 'card--title' || event.target.className === 'card--desc' // edit card
         || event.target.className === 'card--bottom' || event.target.className === 'card--date') {
-        let card = event.target.closest('.card');
-        let cardID = +card.id;
-        let column;
-        let cardColumn = card.closest('div').className;
-        if (cardColumn == 'board__to-do--container') column='toDoCards';
-        if (cardColumn == 'board__in-progress--container') column='inProgressCards';
-        if (cardColumn == 'board__done--container') column='doneCards';
+        let card = event.target.closest('.card'),
+            cardID = +card.id,
+            column,
+            cardColumn = card.closest('div').className;
+        if (cardColumn == 'board__to-do--container') column='cardsArray[0]';
+        if (cardColumn == 'board__in-progress--container') column='cardsArray[1]';
+        if (cardColumn == 'board__done--container') column='cardsArray[2]';
         let cardTitle = card.querySelector('.card--title').innerHTML;
         let cardDesc = card.querySelector('.card--desc').innerHTML;
         let cardDate = card.querySelector('.card--date').innerHTML;
@@ -286,52 +261,50 @@ kanbanBoard.addEventListener('click', event => {    // clicks inside of board
 
     if (event.target.className === 'board--delBtn') { // Clear Column btn
         if (event.target.closest('.board__to-do--container')) {
-            clearColumn(toDoCardsArray, toDoCards, 'toDoCards'); // clear array, html, localstorage
+            clearColumn(cardsArray[0], slidesCards[0], 'cardsArray[0]'); // clear array, html, localstorage
         } else if (event.target.closest('.board__in-progress--container')) {
             modalWindowConfirm.style.visibility = 'visible'; // call confirmWindow to clear column
         } else if (event.target.closest('.board__done--container')) {
-            clearColumn(doneCardsArray, doneCards, 'doneCards'); // clear array, html, localstorage
+            clearColumn(cardsArray[2], slidesCards[2], 'cardsArray[2]'); // clear array, html, localstorage
         }
     };
 
     if(event.target.className === 'card--delete-btn' ) { // Delete card btn (inside card)
         if(event.target.closest('.board__to-do--container')) {
-            deleteCard('.card', 'toDoCards', toDoCardsArray);
+            deleteCard('.card', 'cardsArray[0]', cardsArray[0]);
         }
         else if(event.target.closest('.board__in-progress--container')) {
-            deleteCard('.card', 'inProgressCards', inProgressCardsArray);
+            deleteCard('.card', 'cardsArray[1]', cardsArray[1]);
         }
         else if(event.target.closest('.board__done--container')) {
-            deleteCard('.card', 'doneCards', doneCardsArray);
+            deleteCard('.card', 'cardsArray[2]', cardsArray[2]);
         };
     };
 
+    function moveCard(column) {
+        let nextColumn,
+            card = event.target.closest('.card');
+        column == 2 ? nextColumn = 0 : nextColumn = column+1 ;
+        deleteCard(`.card`, `cardsArray[${column}]`, cardsArray[column], cardsArray[nextColumn]); // move
+        slidesCards[nextColumn].append ( card );
+        localStorage.setItem(`cardsArray[${nextColumn}]`, JSON.stringify(cardsArray[nextColumn]));
+    }
+
     if(event.target.className === 'card--move-btn' ) { // Move btn (inside card)
         if(event.target.closest('.board__to-do--container')) {
-            if (inProgressCardsArray.length >= maxInProgressCards) {
+            if (cardsArray[1].length >= maxInProgressCards) {
             alert(`You can't have more than ${maxInProgressCards} tasks in 'In Progress' column.\nPlease delete one or more tasks.`)
             } else {
-            let card = event.target.closest('.card');
-            deleteCard('.card', 'toDoCards', toDoCardsArray, inProgressCardsArray); // Copy and delete = move
-            inProgressCards.append ( card );
-            localStorage.setItem('inProgressCards', JSON.stringify(inProgressCardsArray)); 
+                moveCard(0);
             }
         } else if(event.target.closest('.board__in-progress--container')) {
-            let card = event.target.closest('.card');
-            deleteCard('.card', 'inProgressCards', inProgressCardsArray, doneCardsArray); // Copy and delete = move
-            doneCards.append ( card );
-            localStorage.setItem('doneCards', JSON.stringify(doneCardsArray));
+            moveCard(1);
         } else if(event.target.closest('.board__done--container')) {
-            let card = event.target.closest('.card');
-            deleteCard('.card', 'doneCards', doneCardsArray, toDoCardsArray); // Copy and delete = move
-            toDoCards.append ( card );
-            localStorage.setItem('toDoCards', JSON.stringify(toDoCardsArray));
+            moveCard(2);
         };
     };
     calcBoardHeight();
-    setUserNamePosition(toDoCards);
-    setUserNamePosition(doneCards);
-    setUserNamePosition(inProgressCards);
+    refreshBoard();
 } ) // end of kanbanBoard.addEventListener
 
 createCardBtn.addEventListener('click',  () => { // click on 'Add card' calls modal window with card form
@@ -353,8 +326,8 @@ modalWindow.addEventListener('submit', event => {   // form submit Btn (create n
     let cardUser = formNewCard.querySelector('#usersList').value;
     let timerIDgen = new Date();
     let cardId = timerIDgen.getMinutes() * timerIDgen.getMilliseconds();
-    toDoCards.append ( createCard(dateTime, cardTitle, cardDesc, cardId, cardUser, 1) );
-    localStorage.setItem('toDoCards', JSON.stringify(toDoCardsArray));
+    slidesCards[0].append ( createCard(dateTime, cardTitle, cardDesc, cardId, cardUser, 1) );
+    localStorage.setItem('cardsArray[0]', JSON.stringify(cardsArray[0]));
     closeModalWindow();
     refreshBoard();
     calcBoardHeight();
@@ -395,18 +368,18 @@ modalWindowEdit.addEventListener('click', event => {
     modalWindowEdit.querySelector('.card--edit-title').value) { //save new title (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-title').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-title').classList.remove('saveImg');
-        updateCard('toDoCards',toDoCardsArray, 'title');
-        updateCard('inProgressCards',inProgressCardsArray, 'title');
-        updateCard('doneCards',doneCardsArray, 'title');
+        updateCard('cardsArray[0]',cardsArray[0], 'title');
+        updateCard('cardsArray[1]',cardsArray[1], 'title');
+        updateCard('cardsArray[2]',cardsArray[2], 'title');
         refreshBoard();
     }
     else if (event.target.className === editDesc+' saveImg' &&
     modalWindowEdit.querySelector('.card--edit-desc').value) { //save new description (press saveBtn)
         modalWindowEdit.querySelector('.card--edit-desc').readOnly = true ;
         modalWindowEdit.querySelector('.card--edit-img.edit-desc').classList.remove('saveImg');
-        updateCard('toDoCards',toDoCardsArray, 'desc')
-        updateCard('inProgressCards',inProgressCardsArray, 'desc');
-        updateCard('doneCards',doneCardsArray, 'desc');
+        updateCard('cardsArray[0]',cardsArray[0], 'desc')
+        updateCard('cardsArray[1]',cardsArray[1], 'desc');
+        updateCard('cardsArray[2]',cardsArray[2], 'desc');
         refreshBoard();
     } else if (event.target.className === 'card__add-comment--button') { // press Add Comment btn
         modalWindowEdit.querySelector('.card__add-comment--button').style.display = 'none';
@@ -443,7 +416,7 @@ modalWindowEdit.addEventListener('click', event => {
 
 modalWindowConfirm.addEventListener('click', event => {
     if (event.target.id === 'deleteInProgressCards') {
-        clearColumn(inProgressCardsArray, inProgressCards, 'inProgressCards'); //clear array, html, localstorage
+        clearColumn(cardsArray[1], slidesCards[1], 'cardsArray[1]'); //clear array, html, localstorage
         location.reload();
     } else if (event.target.id === 'notDeleteInProgressCards') {
         location.reload();
@@ -455,9 +428,9 @@ modalWindowConfirm.addEventListener('click', event => {
 
 let slideIndex = +sessionStorage['currentSlide'] || 1; // load last slide number from sessionStorage
 
-if ( document.defaultView.getComputedStyle(toDoBoard).getPropertyValue("display") == "none" ||
-    document.defaultView.getComputedStyle(inProgressBoard).getPropertyValue("display") == "none" ||
-    document.defaultView.getComputedStyle(doneBoard).getPropertyValue("display") == "none"
+if ( document.defaultView.getComputedStyle(slides[0]).getPropertyValue("display") == "none" ||
+    document.defaultView.getComputedStyle(slides[1]).getPropertyValue("display") == "none" ||
+    document.defaultView.getComputedStyle(slides[2]).getPropertyValue("display") == "none"
 ) { showSlides(slideIndex) 
 } else { slider.style.display = 'none'}
 
