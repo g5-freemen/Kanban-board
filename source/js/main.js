@@ -129,11 +129,6 @@ function showCardsCounter() { // show all counters of cards
     }
 };
 
-function closeModalWindow() {
-    formNewCard.reset();
-    location.reload();
-};
-
 function clearColumn(array, cardsHTML, cardsLS) { // clear column
     if (array) array.length = 0;
     if (cardsHTML) cardsHTML.innerHTML = '';
@@ -328,12 +323,13 @@ modalWindow.addEventListener('submit', event => {   // form submit Btn (create n
     let cardId = timerIDgen.getMinutes() * timerIDgen.getMilliseconds();
     slidesCards[0].append ( createCard(dateTime, cardTitle, cardDesc, cardId, cardUser, 1) );
     localStorage.setItem('cardsArray[0]', JSON.stringify(cardsArray[0]));
-    closeModalWindow();
-    refreshBoard();
-    calcBoardHeight();
+    location.reload();
 } );
 
-closeModalWindowBtn.addEventListener('click', closeModalWindow); // close modal window if click closeBtn
+closeModalWindowBtn.addEventListener('click', () => {
+    formNewCard.reset();
+    location.reload();
+}); // close modal window if click closeBtn
 
 modalWindowEdit.addEventListener('click', event => {    
     if (!event.target.closest('.modal-window--container') || // close cardEdit modal window if click outside it
