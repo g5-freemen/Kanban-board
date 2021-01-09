@@ -1,4 +1,4 @@
-# [Kanban-board](https://g5-freemen.github.io/Kanban-board/dist/)
+# [Kanban-board](https://g5-freemen.github.io/Kanban-board/)
 
 ## A board to keep track of your tasks
 
