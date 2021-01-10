@@ -45,10 +45,6 @@
     align-items: center;
 }
 
-.board__in-progress--container, .board__done--container {
-    display: none;
-}
-
 .board__title-bar {
     @include flexible(space-between, center, row, wrap);
     margin-bottom: $smallPadding;
@@ -464,7 +460,7 @@ label {
     cursor: pointer;
     height: $smallBtnSize/2;
     width: $smallBtnSize/2;
-    margin: 0 2px;
+    margin: 0 3px;
     background-color: $primaryBGColor;
     border-radius: 50%;
     display: inline-block;

@@ -17,7 +17,8 @@ let slider = document.getElementById('#slider'),
     formNewCard = document.querySelector('.card-form'),
     cardsArray = [ [], [], [] ],
     commentsArray = [],
-    maxInProgressCards = 5;
+    maxInProgressCards = 5,
+    minWidthSlider = 1000;
 
 //#region Functions
 
@@ -423,12 +424,22 @@ modalWindowConfirm.addEventListener('click', event => {
 //#region Slider 
 
 let slideIndex = +sessionStorage['currentSlide'] || 1; // load last slide number from sessionStorage
+slider.querySelector('.prev').addEventListener('click', () => plusSlides(-1));
+slider.querySelector('.next').addEventListener('click', () => plusSlides(1));
+let dots = slider.querySelectorAll('.dot');
+slider.querySelector('.slider-dots').addEventListener('click', event => {
+    if(event.target.className.includes('dot')) {
+        if (dots[0] == event.target) currentSlide(1)
+        if (dots[1] == event.target) currentSlide(2)
+        if (dots[2] == event.target) currentSlide(3)
+    }
+} )
 
-if ( document.defaultView.getComputedStyle(slides[0]).getPropertyValue("display") == "none" ||
-    document.defaultView.getComputedStyle(slides[1]).getPropertyValue("display") == "none" ||
-    document.defaultView.getComputedStyle(slides[2]).getPropertyValue("display") == "none"
-) { showSlides(slideIndex) 
-} else { slider.style.display = 'none'}
+if ( window.innerHeight > window.innerWidth &&
+        window.innerWidth < minWidthSlider ||
+        window.innerWidth < minWidthSlider) { 
+    showSlides(slideIndex);
+    }
 
 function plusSlides(n) { // change slide number
   showSlides(slideIndex += n);
@@ -448,7 +459,7 @@ function showSlides(n) {
     for (let i = 0; i < 3; i++) {
         if (i === slideIndex-1) { 
             slides[i].style.display = 'flex';
-            dots[i].className += " active"; // make slider dot -> active
+            if (!dots[i].className.includes('active')) dots[i].className += " active"; // make slider dot -> active
         } else { 
             slides[i].style.display = 'none';
             dots[i].className = dots[i].className.replace(" active", "");  // make slider dot -> non-active
@@ -469,7 +480,7 @@ function handleTouchStart(evt) {
 function handleTouchEnd(evt) {
     let x1 = +evt.touches[0].clientX.toFixed(),
         xDiff = Math.abs(x0 - x1);
-    if ( (x0 || x0 === 0) && xDiff > +kanbanBoard.clientWidth * 0.05 ) {
+    if ( (x0 || x0 === 0) && xDiff > +kanbanBoard.clientWidth * 0.1 ) {
         if (x1 > x0) { plusSlides(-1) } 
         else { plusSlides(1) }
     x0 = null;

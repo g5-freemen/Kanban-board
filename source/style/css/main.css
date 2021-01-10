@@ -466,10 +466,6 @@ template {
           align-items: center;
 }
 
-.board__in-progress--container, .board__done--container {
-  display: none;
-}
-
 .board__title-bar {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1070,7 +1066,7 @@ label {
   cursor: pointer;
   height: 0.5rem;
   width: 0.5rem;
-  margin: 0 2px;
+  margin: 0 3px;
   background-color: #dddddd;
   border-radius: 50%;
   display: inline-block;
@@ -1122,6 +1118,18 @@ label {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+@media screen and (orientation: landscape) and (min-width: 1000px) {
+  #slider, .slider-dots, .prev, .next {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  #slider, .slider-dots, .prev, .next {
+    display: none;
+  }
+}
+
 @media screen and (max-width: 281px) {
   .card-form {
     -webkit-transform: scale(0.85);
@@ -1167,11 +1175,6 @@ label {
         -ms-flex: auto;
             flex: auto;
     width: auto;
-  }
-  .board__in-progress--container, .board__done--container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
   }
   .modal-window--container {
     -webkit-box-flex: 0.264;
